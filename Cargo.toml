@@ -1,0 +1,20 @@
+[package]
+name = "hko"
+version = "1.5.0"
+edition = "2021"
+authors = ["GreenYun <microsoft.zh.cn@gmail.com>"]
+license = "MIT"
+description = "Rust library for Hong Kong Observatory Open Data API"
+repository = "https://github.com/GreenYun/hko-rust"
+keywords = ["weather", "hong-kong", "observatory"]
+include = ["src/**/*.rs", "README.md", "LICENSE"]
+
+[dependencies]
+anyhow = "^1.0.44"
+chrono = "^0.4"
+reqwest = { version = ">=0.11", features = ["json"] }
+serde = {version = "^1.0.130", features = ["derive"]}
+serde_json = "^1.0.68"
+strum = ">=0.22"
+strum_macros = ">=0.22"
+tokio = {version = "^1.12", features = ["full"]}
