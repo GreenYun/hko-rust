@@ -150,7 +150,7 @@ where
         {
             match value.to_uppercase().as_str() {
                 "TRUE" => Ok(true),
-                "FALSE" => Ok(false),
+                "FALSE" | "" => Ok(false),
                 _ => Err(de::Error::invalid_value(
                     de::Unexpected::Str(value),
                     &EXPECTING,
