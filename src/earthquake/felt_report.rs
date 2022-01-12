@@ -1,4 +1,4 @@
-// Copyright (c) 2021 GreenYun Organization
+// Copyright (c) 2022 GreenYun Organization
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
@@ -6,10 +6,12 @@
 use chrono::{DateTime, FixedOffset};
 use serde::Deserialize;
 
+use crate::fetch::impl_api;
+
 /// Locally Felt Earth Tremor Report
 ///
-/// __Note__: This API has never been tested. Use [`fetch`](crate::fetch()) at your risk.
-#[derive(Debug, Deserialize)]
+/// __Note__: This API has never been tested. Use `fetch` at your risk.
+#[derive(Clone, Debug, Deserialize)]
 pub struct FeltReport {
     #[serde(rename = "lat")]
     pub latitude: f64,
@@ -25,12 +27,10 @@ pub struct FeltReport {
     pub details: String,
 
     #[serde(rename = "ptime")]
-    #[serde(deserialize_with = "crate::internal::deserialize::deserialize_to_datetime")]
     pub occur_time: DateTime<FixedOffset>,
 
     #[serde(rename = "updateTime")]
-    #[serde(deserialize_with = "crate::internal::deserialize::deserialize_to_datetime")]
     pub update_time: DateTime<FixedOffset>,
 }
 
-impl_api!(FeltReport, feltearthquake);
+impl_api!(FeltReport, earthquake, feltearthquake);

@@ -1,23 +1,11 @@
-// Copyright (c) 2021 GreenYun Organization
+// Copyright (c) 2022 GreenYun Organization
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-use std::{error, fmt, str::FromStr};
+use std::str::FromStr;
 
-use crate::impl_display_traits;
-
-/// This error occurs when trying to convert invalid string to PSR type.
-#[derive(Debug, Clone, Copy)]
-pub struct InvalidPSRError;
-
-impl fmt::Display for InvalidPSRError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        "PSR value is not valid".fmt(f)
-    }
-}
-
-impl error::Error for InvalidPSRError {}
+use crate::{error::InvalidPSRError, impl_display_traits};
 
 /// Probability of significant rain.
 ///
@@ -50,5 +38,3 @@ impl FromStr for PSR {
 mod string;
 
 impl_display_traits!(PSR);
-
-mod test;

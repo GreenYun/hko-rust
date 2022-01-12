@@ -1,4 +1,4 @@
-// Copyright (c) 2021 GreenYun Organization
+// Copyright (c) 2022 GreenYun Organization
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
@@ -6,8 +6,10 @@
 use chrono::{DateTime, FixedOffset};
 use serde::Deserialize;
 
+use crate::fetch::impl_api;
+
 /// Quick Earthquake Messages
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Message {
     #[serde(rename = "lat")]
     pub latitude: f64,
@@ -21,12 +23,10 @@ pub struct Message {
     pub region: String,
 
     #[serde(rename = "ptime")]
-    #[serde(deserialize_with = "crate::internal::deserialize::deserialize_to_datetime")]
     pub occur_time: DateTime<FixedOffset>,
 
     #[serde(rename = "updateTime")]
-    #[serde(deserialize_with = "crate::internal::deserialize::deserialize_to_datetime")]
     pub update_time: DateTime<FixedOffset>,
 }
 
-impl_api!(Message, qem);
+impl_api!(Message, earthquake, qem);

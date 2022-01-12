@@ -1,4 +1,4 @@
-// Copyright (c) 2021 GreenYun Organization
+// Copyright (c) 2022 GreenYun Organization
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
@@ -12,7 +12,7 @@ use crate::impl_display_traits;
 ///
 /// In particular circumstance, the code may store as [`String`] type, which is
 /// safe to convert to [`WarningStatementCode`].
-#[derive(Debug, Deserialize, EnumString, PartialEq)]
+#[derive(Clone, Debug, Deserialize, EnumString, PartialEq)]
 pub enum WarningStatementCode {
     WFIRE,   // Fire Danger Warning
     WFROST,  // Frost Warning
@@ -29,7 +29,7 @@ pub enum WarningStatementCode {
 }
 
 /// Warning subtype code.
-#[derive(Debug, Deserialize, EnumString, PartialEq)]
+#[derive(Clone, Debug, Deserialize, EnumString, PartialEq)]
 pub enum WarningSubtypeCode {
     WFIREY, // Yellow Fire Danger Warning
     WFIRER, // Red Fire Danger Warning
@@ -46,14 +46,14 @@ pub enum WarningSubtypeCode {
     TC10,   // No. 10 Tropical Cyclone Warning
 }
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq)]
 #[serde(untagged)]
 pub enum Code {
     WarningStatement(WarningStatementCode),
     WarningSubType(WarningSubtypeCode),
 }
 
-#[derive(Debug, Deserialize, EnumString, PartialEq)]
+#[derive(Clone, Debug, Deserialize, EnumString, PartialEq)]
 pub enum Action {
     ISSUE,
     REISSUE,

@@ -1,4 +1,4 @@
-// Copyright (c) 2021 GreenYun Organization
+// Copyright (c) 2022 GreenYun Organization
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
@@ -8,8 +8,10 @@
 use chrono::{DateTime, FixedOffset};
 use serde::Deserialize;
 
+use crate::fetch::impl_api;
+
 /// Local weather forecast.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Local {
     pub general_situation: String,
@@ -18,9 +20,7 @@ pub struct Local {
     pub forecast_period: String,
     pub forecast_desc: String,
     pub outlook: String,
-
-    #[serde(deserialize_with = "crate::internal::deserialize::deserialize_to_datetime")]
     pub update_time: DateTime<FixedOffset>,
 }
 
-impl_api!(Local, flw);
+impl_api!(Local, weather, flw);

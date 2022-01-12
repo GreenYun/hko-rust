@@ -3,7 +3,6 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-pub(crate) use r#macro::*;
+//! Daily Maximum Temperature
 
-pub mod deserialize;
-mod r#macro;
+impl_clm!(CLMMAXT);

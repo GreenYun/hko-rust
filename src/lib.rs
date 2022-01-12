@@ -1,7 +1,9 @@
-// Copyright (c) 2021 GreenYun Organization
+// Copyright (c) 2022 GreenYun Organization
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
+
+#![feature(doc_cfg)]
 
 //! This is a library for users to access Hong Kong Observatory Open Data API.
 //!
@@ -16,16 +18,18 @@
 //! [hko.gov.hk](https://www.weather.gov.hk/en/abouthko/opendata_intro.htm) (or
 //! [中文](https://www.weather.gov.hk/tc/abouthko/opendata_intro.htm)).
 
-pub use fetch::*;
-
-#[macro_use]
-mod r#macro;
-
-mod fetch;
-mod internal;
+#[cfg(feature = "fetch")]
+pub use self::fetch::fetch;
+pub use self::fetch::API;
 
 pub mod common;
-
 pub mod earthquake;
+pub mod error;
+mod fetch;
+mod internal;
+#[macro_use]
+mod r#macro;
+#[cfg(feature = "opendata")]
+#[doc(cfg(feature = "opendata"))]
 pub mod opendata;
 pub mod weather;

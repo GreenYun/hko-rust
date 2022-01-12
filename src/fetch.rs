@@ -1,41 +1,47 @@
-// Copyright (c) 2021 GreenYun Organization
+// Copyright (c) 2022 GreenYun Organization
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-use anyhow::Result;
-use reqwest::get;
-use serde::de::DeserializeOwned;
-
 use crate::common::Lang;
 
+/// API trait for all data types.
 pub trait API {
     const BASE: &'static str;
     const DATATYPE: &'static str;
 
-    fn url(&self, lang: Lang) -> String {
+    /// Generate the URL for retrieving the data, in specified language.
+    fn url(lang: Lang) -> String {
         format!(
-            "https://data.weather.gov.hk/weatherAPI/opendata/{}.php?dataType={}&lang={:?}",
+            "https://data.weather.gov.hk/weatherAPI/opendata/{}.php?dataType={}&lang={}",
             Self::BASE,
             Self::DATATYPE,
-            lang
+            lang.to_string()
         )
     }
 }
 
-pub async fn fetch<T>(lang: Lang) -> Result<T>
+macro_rules! impl_api {
+    ($t:ty, $b:ident, $d:ident) => {
+        impl crate::fetch::API for $t {
+            const BASE: &'static str = stringify!($b);
+            const DATATYPE: &'static str = stringify!($d);
+        }
+    };
+}
+
+pub(crate) use impl_api;
+
+/// Helper function to fetch data from API.
+#[cfg(feature = "fetch")]
+#[doc(cfg(feature = "fetch"))]
+pub async fn fetch<T>(lang: Lang) -> anyhow::Result<T>
 where
-    T: API + DeserializeOwned,
+    T: API + serde::de::DeserializeOwned,
 {
+    use reqwest::get;
+
     Ok(serde_json::from_str(
-        &get(&(format!(
-            "https://data.weather.gov.hk/weatherAPI/opendata/{}.php?dataType={}&lang={:?}",
-            T::BASE,
-            T::DATATYPE,
-            lang
-        )))
-        .await?
-        .text()
-        .await?,
+        &get(T::url(lang)).await?.text().await?,
     )?)
 }

@@ -3,7 +3,6 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-pub(crate) use r#macro::*;
+//! Times of moonrise, moon transit and moonset.
 
-pub mod deserialize;
-mod r#macro;
+impl_rs!(MRS);

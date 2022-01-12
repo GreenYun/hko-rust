@@ -1,4 +1,4 @@
-// Copyright (c) 2021 GreenYun Organization
+// Copyright (c) 2022 GreenYun Organization
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
@@ -23,7 +23,7 @@ pub struct PlaceValUnit {
 /// One or more slice of messages.
 ///
 /// [`String`](Message::String)`(`[`String`]`)` might be empty.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 #[serde(untagged)]
 pub enum Message {
     String(String),

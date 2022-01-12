@@ -1,4 +1,4 @@
-// Copyright (c) 2021 GreenYun Organization
+// Copyright (c) 2022 GreenYun Organization
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
@@ -8,10 +8,13 @@
 use chrono::{DateTime, FixedOffset};
 use serde::Deserialize;
 
-use crate::common::{Message, PlaceValUnit};
+use crate::{
+    common::{Message, PlaceValUnit},
+    fetch::impl_api,
+};
 
 /// Whether lightning `occur`s in `place`.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct LightningData {
     pub place: String,
 
@@ -20,22 +23,18 @@ pub struct LightningData {
 }
 
 /// Lightning occurring records from `start_time` to `end_time`.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Lightning {
     pub data: Vec<LightningData>,
-
-    #[serde(deserialize_with = "crate::internal::deserialize::deserialize_to_datetime")]
     pub start_time: DateTime<FixedOffset>,
-
-    #[serde(deserialize_with = "crate::internal::deserialize::deserialize_to_datetime")]
     pub end_time: DateTime<FixedOffset>,
 }
 
 /// `max` and `min` rainfall measured in `place`.
 ///
 /// Either `max` or `min` may be missing, without default value. Leave to [`None`].
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct RainfallData {
     pub place: String,
     pub max: Option<f32>,
@@ -49,30 +48,26 @@ pub struct RainfallData {
 }
 
 /// Rainfall `data` measured between `start_time` and `end_time`.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Rainfall {
     pub data: Vec<RainfallData>,
-
-    #[serde(deserialize_with = "crate::internal::deserialize::deserialize_to_datetime")]
     pub start_time: DateTime<FixedOffset>,
-
-    #[serde(deserialize_with = "crate::internal::deserialize::deserialize_to_datetime")]
     pub end_time: DateTime<FixedOffset>,
 }
 
 /// UV index `value` observed from specified `place`, with additional
 /// `desc`ription and `message` (optional).
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct UVIndexData {
     pub place: String,
-    pub value: f64,
+    pub value: f32,
     pub desc: String,
     pub message: Option<String>,
 }
 
 /// UV index `data` collected at specified `record_time`.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct UVIndex {
     pub data: Vec<UVIndexData>,
@@ -83,7 +78,7 @@ pub struct UVIndex {
 ///
 /// [`Empty`](UVIndexOrEmpty::Empty) means that UV index is not applicable
 /// currently, and should contain an empty string.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 #[serde(untagged)]
 pub enum UVIndexOrEmpty {
     UVIndex(UVIndex),
@@ -91,22 +86,18 @@ pub enum UVIndexOrEmpty {
 }
 
 /// The temperature, observed from specified `place`s, at specified `recode_time`.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Temperature {
     pub data: Vec<PlaceValUnit>,
-
-    #[serde(deserialize_with = "crate::internal::deserialize::deserialize_to_datetime")]
     pub record_time: DateTime<FixedOffset>,
 }
 
 /// The relative humidity, observed from specified `place`s, at specified `recode_time`.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Humidity {
     pub data: Vec<PlaceValUnit>,
-
-    #[serde(deserialize_with = "crate::internal::deserialize::deserialize_to_datetime")]
     pub record_time: DateTime<FixedOffset>,
 }
 
@@ -120,18 +111,17 @@ pub struct Humidity {
 /// Visit
 /// [hko.gov.hk](https://www.hko.gov.hk/textonly/v2/explain/wxicon_e.htm) for
 /// more details.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Icon {
     pub icon: Vec<i32>,
 
     #[serde(rename = "iconUpdateTime")]
-    #[serde(deserialize_with = "crate::internal::deserialize::deserialize_to_datetime")]
     pub update_time: DateTime<FixedOffset>,
 }
 
 /// Current weather report.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Current {
     pub lightning: Option<Lightning>,
@@ -165,9 +155,7 @@ pub struct Current {
     pub rainfall_january_to_last_month: String,
     pub temperature: Temperature,
     pub humidity: Humidity,
-
-    #[serde(deserialize_with = "crate::internal::deserialize::deserialize_to_datetime")]
     pub update_time: DateTime<FixedOffset>,
 }
 
-impl_api!(Current, rhrread);
+impl_api!(Current, weather, rhrread);

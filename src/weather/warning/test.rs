@@ -1,18 +1,14 @@
-// Copyright (c) 2021 GreenYun Organization
+// Copyright (c) 2022 GreenYun Organization
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-#[cfg(test)]
-mod tests {
-    use crate::{common::Lang, fetch::fetch};
+#[tokio::test]
+async fn info_test() {
+    use crate::weather::warning::info::Info;
 
-    #[tokio::test]
-    async fn info_test() {
-        use crate::weather::warning::info::Info;
-
-        let warning = serde_json::from_str::<Info>(
-                r#"{
+    let test_input = {
+        r#"{
     "details": [
         {
             "contents": [
@@ -54,20 +50,27 @@ mod tests {
             "updateTime": "2020-09-24T07:00:00+08:00"
         }
     ]
-}"#,
-            ).unwrap();
-        println!("{:?}", warning);
+}"#
+    };
 
-        let warning: Info = fetch(Lang::tc).await.unwrap();
+    let warning: Info = serde_json::from_str(test_input).unwrap();
+    println!("{:?}", warning);
+
+    #[cfg(feature = "fetch")]
+    {
+        use crate::{common::Lang, fetch::fetch};
+
+        let warning: Info = fetch(Lang::TC).await.unwrap();
         println!("{:?}", warning);
     }
+}
 
-    #[tokio::test]
-    async fn summary_test() {
-        use crate::weather::warning::summary::Summary;
+#[tokio::test]
+async fn summary_test() {
+    use crate::weather::warning::summary::Summary;
 
-        let summary = serde_json::from_str::<Summary>(
-            r#"{
+    let test_input = {
+        r#"{
     "WHOT": {
         "name": "酷熱天氣警告",
         "code": "WHOT",
@@ -99,12 +102,17 @@ mod tests {
         "issueTime": "2020-09-24T11:15:00+08:00",
         "updateTime": "2020-09-24T11:15:00+08:00"
     }
-}"#,
-        )
-        .unwrap();
-        println!("{:?}", summary);
+}"#
+    };
 
-        let summary: Summary = fetch(Lang::en).await.unwrap();
+    let summary: Summary = serde_json::from_str(test_input).unwrap();
+    println!("{:?}", summary);
+
+    #[cfg(feature = "fetch")]
+    {
+        use crate::{common::Lang, fetch::fetch};
+
+        let summary: Summary = fetch(Lang::EN).await.unwrap();
         println!("{:?}", summary);
     }
 }

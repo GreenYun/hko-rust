@@ -1,4 +1,4 @@
-// Copyright (c) 2021 GreenYun Organization
+// Copyright (c) 2022 GreenYun Organization
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
@@ -9,10 +9,13 @@ use chrono::{Date, DateTime, FixedOffset};
 use serde::Deserialize;
 
 use super::PSR;
-use crate::common::{PlaceValUnit, ValUnit};
+use crate::{
+    common::{PlaceValUnit, ValUnit},
+    fetch::impl_api,
+};
 
 /// The weather forecast on specified `date`.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct WeatherForcast {
     #[serde(rename = "forecastDate")]
     #[serde(deserialize_with = "crate::internal::deserialize::deserialize_yyyymmdd_to_datetime")]
@@ -53,30 +56,28 @@ pub struct WeatherForcast {
 }
 
 /// Sea temperature measured in `place` at `record_time`.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct SeaTemp {
     #[serde(flatten)]
     pub temp: PlaceValUnit,
 
     #[serde(rename = "recordTime")]
-    #[serde(deserialize_with = "crate::internal::deserialize::deserialize_to_datetime")]
     pub record_time: DateTime<FixedOffset>,
 }
 
 /// Soil temperature measured in `place` at `record_time`.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct SoilTemp {
     #[serde(flatten)]
     pub temp: PlaceValUnit,
     pub depth: ValUnit,
 
     #[serde(rename = "recordTime")]
-    #[serde(deserialize_with = "crate::internal::deserialize::deserialize_to_datetime")]
     pub record_time: DateTime<FixedOffset>,
 }
 
 /// 9-day weather forecast.
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct NineDay {
     pub general_situation: String,
@@ -85,9 +86,7 @@ pub struct NineDay {
     pub weather_forecast: Vec<WeatherForcast>,
     pub sea_temp: SeaTemp,
     pub soil_temp: Vec<SoilTemp>,
-
-    #[serde(deserialize_with = "crate::internal::deserialize::deserialize_to_datetime")]
     pub update_time: DateTime<FixedOffset>,
 }
 
-impl_api!(NineDay, fnd);
+impl_api!(NineDay, weather, fnd);

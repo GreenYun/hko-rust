@@ -3,7 +3,6 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-pub(crate) use r#macro::*;
+//! Times of sunrise, sun transit and sunset.
 
-pub mod deserialize;
-mod r#macro;
+impl_rs!(SRS);

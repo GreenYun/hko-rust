@@ -1,4 +1,4 @@
-// Copyright (c) 2021 GreenYun Organization
+// Copyright (c) 2022 GreenYun Organization
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
@@ -72,12 +72,12 @@ macro_rules! impl_display_traits {
     ($t:ty) => {
         impl_display_traits_internal! {
             $t;
-            Binary, sc, b, name, name in simplified Chinese;
-            Pointer, sc, p, desc, description in simplified Chinese;
-            Octal, tc, o, name, name in traditional Chinese;
-            LowerHex, tc, x, desc, description in traditional Chinese;
-            LowerExp, en, e, name, name in English;
-            UpperExp, en, E, desc, description in English;
+            Binary, SC, b, name, name in simplified Chinese;
+            Pointer, SC, p, desc, description in simplified Chinese;
+            Octal, TC, o, name, name in traditional Chinese;
+            LowerHex, TC, x, desc, description in traditional Chinese;
+            LowerExp, EN, e, name, name in English;
+            UpperExp, EN, E, desc, description in English;
         }
     };
 }

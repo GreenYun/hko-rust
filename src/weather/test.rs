@@ -1,18 +1,16 @@
-// Copyright (c) 2021 GreenYun Organization
+// Copyright (c) 2022 GreenYun Organization
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-#[cfg(test)]
-mod tests {
-    use crate::{common::Lang, fetch::fetch};
+#[tokio::test]
+async fn current_test() {
+    use num_traits::FromPrimitive;
 
-    #[tokio::test]
-    async fn current_test() {
-        use crate::weather::current::Current;
+    use crate::weather::{current::Current, Name};
 
-        let current = serde_json::from_str::<Current>(
-            r#"{
+    let test_input = {
+        r#"{
     "lightning": {
         "data": [
             {
@@ -89,21 +87,29 @@ mod tests {
             }
         ]
     }
-}"#,
-        )
-        .unwrap();
-        println!("{:?}", current);
-        assert_eq!(current.temperature.data[0].value, 31.);
+}"#
+    };
 
-        let current: Current = fetch(Lang::en).await.unwrap();
+    let current: Current = serde_json::from_str(test_input).unwrap();
+    println!("{:?}", current);
+    assert_eq!(current.temperature.data[0].value, 31.);
+    println!("{:o}", Name::from_i32(current.icon.icon[0]).unwrap());
+
+    #[cfg(feature = "fetch")]
+    {
+        use crate::{common::Lang, fetch::fetch};
+
+        let current: Current = fetch(Lang::EN).await.unwrap();
         println!("{:?}", current);
     }
+}
 
-    #[tokio::test]
-    async fn local_test() {
-        use crate::weather::local::Local;
+#[tokio::test]
+async fn local_test() {
+    use crate::weather::local::Local;
 
-        let local = serde_json::from_str::<Local>(r#"{
+    let test_input = {
+        r#"{
     "generalSituation": "廣東沿岸風勢微弱。此外，驟雨正影響該區。本港方面，今早部分地區錄得超過10毫米雨量，而西貢的雨量更超過30毫米。",
     "tcInfo": "在正午十二時，颱風燦都集結在上海以東約230公里，預料移動緩慢，在上海以東海域徘徊。",
     "fireDangerWarning": "",
@@ -111,21 +117,29 @@ mod tests {
     "forecastDesc": "大致多雲，間中有驟雨及雷暴，初時局部地區雨勢頗大。吹微風。",
     "outlook": "未來兩三日間中有驟雨。週末期間部分時間有陽光。",
     "updateTime": "2021-09-14T12:45:00+08:00"
-}"#,
-        ).unwrap();
-        println!("{:?}", local);
+}"#
+    };
 
-        assert!(local.general_situation.len() > 0);
+    let local: Local = serde_json::from_str(test_input).unwrap();
+    println!("{:?}", local);
 
-        let local: Local = fetch(Lang::en).await.unwrap();
+    assert!(local.general_situation.len() > 0);
+
+    #[cfg(feature = "fetch")]
+    {
+        use crate::{common::Lang, fetch::fetch};
+
+        let local: Local = fetch(Lang::EN).await.unwrap();
         println!("{:?}", local);
     }
+}
 
-    #[tokio::test]
-    async fn nineday_test() {
-        use crate::weather::{nine_day::NineDay, psr::PSR};
+#[tokio::test]
+async fn nineday_test() {
+    use crate::weather::{nine_day::NineDay, psr::PSR};
 
-        let nine_day = serde_json::from_str::<NineDay>(r#"{
+    let test_input = {
+        r#"{
         "generalSituation": "華南沿岸未來兩三日風勢微弱，而一道雨帶會持續影響該區。隨著高空反氣旋增強，週末期間華南地區天色好轉及酷熱。熱帶氣旋燦都會在未來一兩日在上海以東海域徘徊，隨後移向朝鮮半島至日本一帶並逐漸演變為溫帶氣旋。",
         "weatherForecast": [
             {
@@ -374,24 +388,32 @@ mod tests {
                 }
             }
         ]
-    }"#).unwrap();
-        println!("{:?}", nine_day);
-        assert_eq!(nine_day.weather_forecast[0].max_temp.value, 32.);
-        assert_eq!(nine_day.weather_forecast[1].psr, PSR::Medium);
-        assert_eq!(nine_day.weather_forecast[2].icon, 54);
-        assert_eq!(nine_day.sea_temp.temp.value, 28.);
-        assert_eq!(nine_day.soil_temp[0].temp.value, 31.2);
+    }"#
+    };
 
-        let nine_day: NineDay = fetch(Lang::en).await.unwrap();
+    let nine_day: NineDay = serde_json::from_str(test_input).unwrap();
+    println!("{:?}", nine_day);
+    assert_eq!(nine_day.weather_forecast[0].max_temp.value, 32.);
+    assert_eq!(nine_day.weather_forecast[1].psr, PSR::Medium);
+    assert_eq!(nine_day.weather_forecast[2].icon, 54);
+    assert_eq!(nine_day.sea_temp.temp.value, 28.);
+    assert_eq!(nine_day.soil_temp[0].temp.value, 31.2);
+
+    #[cfg(feature = "fetch")]
+    {
+        use crate::{common::Lang, fetch::fetch};
+
+        let nine_day: NineDay = fetch(Lang::EN).await.unwrap();
         println!("{:?}", nine_day);
     }
+}
 
-    #[tokio::test]
-    async fn tips_test() {
-        use crate::weather::tips::Tips;
+#[tokio::test]
+async fn tips_test() {
+    use crate::weather::tips::Tips;
 
-        let tips = serde_json::from_str::<Tips>(
-            r#"{
+    let test_input = {
+        r#"{
         "swt": [
             {
                 "desc": "Tips 1",
@@ -401,13 +423,18 @@ mod tests {
                 "desc": "Tips 2"
             }
         ]
-    }"#,
-        )
-        .unwrap();
-        println!("{:?}", tips);
-        assert_eq!(tips.tips[1].desc, Some(format!("Tips 2")));
+    }"#
+    };
 
-        let tips: Tips = fetch(Lang::en).await.unwrap();
+    let tips: Tips = serde_json::from_str(test_input).unwrap();
+    println!("{:?}", tips);
+    assert_eq!(tips.tips[1].desc, Some(format!("Tips 2")));
+
+    #[cfg(feature = "fetch")]
+    {
+        use crate::{common::Lang, fetch::fetch};
+
+        let tips: Tips = fetch(Lang::EN).await.unwrap();
         println!("{:?}", tips);
     }
 }

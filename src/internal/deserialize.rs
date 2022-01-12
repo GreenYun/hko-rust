@@ -1,15 +1,17 @@
-// Copyright (c) 2021 GreenYun Organization
+// Copyright (c) 2022 GreenYun Organization
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
 use std::{fmt, str::FromStr};
 
-use chrono::{Date, DateTime, FixedOffset, NaiveDate};
+use chrono::{Date, FixedOffset, NaiveDate, TimeZone};
 use serde::{
-    de::{self, Expected},
+    de::{Error as DeError, Expected, Unexpected, Visitor},
     Deserializer,
 };
+
+use crate::weather::PSR;
 
 pub(crate) fn deserialize_yyyymmdd_to_datetime<'de, D>(
     deserializer: D,
@@ -21,7 +23,7 @@ where
 
     struct DateVisitor;
 
-    impl<'de> de::Visitor<'de> for DateVisitor {
+    impl<'de> Visitor<'de> for DateVisitor {
         type Value = Date<FixedOffset>;
 
         fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
@@ -30,72 +32,20 @@ where
 
         fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
         where
-            E: de::Error,
+            E: DeError,
         {
-            let naive_date = match NaiveDate::parse_from_str(value, "%Y%m%d") {
-                Ok(d) => d,
-                _ => {
-                    return Err(de::Error::invalid_value(
-                        de::Unexpected::Str(value),
-                        &EXPECTING,
-                    ))
-                }
-            };
+            let naive_date = NaiveDate::parse_from_str(value, "%Y%m%d")
+                .map_err(|_| DeError::invalid_value(Unexpected::Str(value), &EXPECTING))?;
 
-            Ok(Date::from_utc(naive_date, FixedOffset::east(8 * 60 * 60)))
+            FixedOffset::east(8 * 60 * 60)
+                .from_local_date(&naive_date)
+                .single()
+                .ok_or(DeError::invalid_value(Unexpected::Str(value), &EXPECTING))
         }
     }
 
     deserializer.deserialize_identifier(DateVisitor)
 }
-
-const EXPECTING: &str = "string of date and time format described in RFC3339";
-
-struct DateTimeVisitor;
-
-impl<'de> de::Visitor<'de> for DateTimeVisitor {
-    type Value = DateTime<FixedOffset>;
-
-    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-        EXPECTING.fmt(formatter)
-    }
-
-    fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
-    where
-        E: de::Error,
-    {
-        match DateTime::parse_from_rfc3339(value) {
-            Ok(date_time) => Ok(date_time),
-            _ => Err(de::Error::invalid_value(
-                de::Unexpected::Str(value),
-                &EXPECTING,
-            )),
-        }
-    }
-}
-
-pub(crate) fn deserialize_to_datetime<'de, D>(
-    deserializer: D,
-) -> Result<DateTime<FixedOffset>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    deserializer.deserialize_identifier(DateTimeVisitor)
-}
-
-pub(crate) fn deserialize_to_option_datetime<'de, D>(
-    deserializer: D,
-) -> Result<Option<DateTime<FixedOffset>>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    match deserializer.deserialize_identifier(DateTimeVisitor) {
-        Ok(d) => Ok(Some(d)),
-        Err(e) => Err(e),
-    }
-}
-
-use crate::weather::PSR;
 
 pub(crate) fn deserialize_to_psr<'de, D>(deserializer: D) -> Result<PSR, D::Error>
 where
@@ -105,7 +55,7 @@ where
 
     struct PSRVisitor;
 
-    impl<'de> de::Visitor<'de> for PSRVisitor {
+    impl<'de> Visitor<'de> for PSRVisitor {
         type Value = PSR;
 
         fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
@@ -114,15 +64,10 @@ where
 
         fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
         where
-            E: de::Error,
+            E: DeError,
         {
-            match PSR::from_str(value) {
-                Ok(psr) => Ok(psr),
-                Err(_) => Err(de::Error::invalid_value(
-                    de::Unexpected::Str(value),
-                    &EXPECTING,
-                )),
-            }
+            PSR::from_str(value)
+                .map_err(|_| DeError::invalid_value(Unexpected::Str(value), &EXPECTING))
         }
     }
 
@@ -137,7 +82,7 @@ where
 
     struct BoolVisitor;
 
-    impl<'de> de::Visitor<'de> for BoolVisitor {
+    impl<'de> Visitor<'de> for BoolVisitor {
         type Value = bool;
 
         fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
@@ -146,15 +91,12 @@ where
 
         fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
         where
-            E: de::Error,
+            E: DeError,
         {
             match value.to_uppercase().as_str() {
                 "TRUE" => Ok(true),
                 "FALSE" | "" => Ok(false),
-                _ => Err(de::Error::invalid_value(
-                    de::Unexpected::Str(value),
-                    &EXPECTING,
-                )),
+                _ => Err(DeError::invalid_value(Unexpected::Str(value), &EXPECTING)),
             }
         }
     }
