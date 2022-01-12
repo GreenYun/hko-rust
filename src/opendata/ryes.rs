@@ -172,7 +172,7 @@ impl FromStr for Response {
                 "ReadingsMinRH",
                 "ReadingsRainfall",
                 "ReadingsAvgRainfall",
-                "ReadingsAccumulatedRainfall",
+                "ReadingsAccumRainfall",
                 "ReadingsMaxUVIndex",
                 "ReadingsMeanUVIndex",
                 "ReadingsSunShine",
