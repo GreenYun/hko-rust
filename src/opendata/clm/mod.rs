@@ -1,7 +1,5 @@
 // Copyright (c) 2022 GreenYun Organization
-//
-// This software is released under the MIT License.
-// https://opensource.org/licenses/MIT
+// SPDX-License-Identifier: MIT
 
 #[allow(unused_macros)]
 macro_rules! response_from_str {

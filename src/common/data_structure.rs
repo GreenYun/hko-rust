@@ -1,18 +1,16 @@
-// Copyright (c) 2022 GreenYun Organization
-//
-// This software is released under the MIT License.
-// https://opensource.org/licenses/MIT
+// Copyright (c) 2021 - 2022 GreenYun Organization
+// SPDX-License-Identifier: MIT
 
 use serde::Deserialize;
 
-/// `value` with `unit`.
+/// `value` with its `unit`.
 #[derive(Clone, Deserialize, Debug, PartialEq)]
 pub struct ValUnit {
     pub value: f32,
     pub unit: String,
 }
 
-/// `value` with `unit` in specified `place`.
+/// `value` with its `unit` in specified `place`.
 #[derive(Clone, Deserialize, Debug, PartialEq)]
 pub struct PlaceValUnit {
     pub place: String,

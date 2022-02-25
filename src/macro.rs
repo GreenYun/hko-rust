@@ -1,7 +1,5 @@
-// Copyright (c) 2022 GreenYun Organization
-//
-// This software is released under the MIT License.
-// https://opensource.org/licenses/MIT
+// Copyright (c) 2021 - 2022 GreenYun Organization
+// SPDX-License-Identifier: MIT
 
 /// Generate the URI of specified weather icon, usually an HTTPS link.
 #[macro_export]

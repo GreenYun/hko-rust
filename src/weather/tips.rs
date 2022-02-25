@@ -1,7 +1,5 @@
-// Copyright (c) 2022 GreenYun Organization
-//
-// This software is released under the MIT License.
-// https://opensource.org/licenses/MIT
+// Copyright (c) 2021 - 2022 GreenYun Organization
+// SPDX-License-Identifier: MIT
 
 //! Special weather tips.
 
@@ -22,7 +20,7 @@ pub struct Tip {
     pub update_time: Option<DateTime<FixedOffset>>,
 }
 
-/// None or more tips.
+/// Special weather tips type contains none or more tips.
 #[derive(Clone, Debug, Deserialize)]
 pub struct Tips {
     #[serde(rename = "swt")]
