@@ -9,8 +9,6 @@ use serde::Deserialize;
 use crate::fetch::impl_api;
 
 /// Locally Felt Earth Tremor Report
-///
-/// __Note__: This API has never been tested. Use `fetch` at your risk.
 #[derive(Clone, Debug, Deserialize)]
 pub struct FeltReport {
     #[serde(rename = "lat")]
@@ -24,7 +22,7 @@ pub struct FeltReport {
     pub magnitude: f64,
     pub intensity: i64,
     pub region: String,
-    pub details: String,
+    pub details: Vec<String>,
 
     #[serde(rename = "ptime")]
     pub occur_time: DateTime<FixedOffset>,
