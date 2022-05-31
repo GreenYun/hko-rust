@@ -10,7 +10,7 @@ use crate::impl_display_traits;
 ///
 /// In particular circumstance, the code may store as [`String`] type, which is
 /// safe to convert to [`WarningStatementCode`].
-#[derive(Clone, Debug, Deserialize, EnumString, PartialEq)]
+#[derive(Clone, Debug, Deserialize, EnumString, Eq, PartialEq)]
 pub enum WarningStatementCode {
     WFIRE,   // Fire Danger Warning
     WFROST,  // Frost Warning
@@ -27,7 +27,7 @@ pub enum WarningStatementCode {
 }
 
 /// Warning subtype code.
-#[derive(Clone, Debug, Deserialize, EnumString, PartialEq)]
+#[derive(Clone, Debug, Deserialize, EnumString, Eq, PartialEq)]
 pub enum WarningSubtypeCode {
     WFIREY, // Yellow Fire Danger Warning
     WFIRER, // Red Fire Danger Warning
@@ -44,14 +44,14 @@ pub enum WarningSubtypeCode {
     TC10,   // No. 10 Tropical Cyclone Warning
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
 #[serde(untagged)]
 pub enum Code {
     WarningStatement(WarningStatementCode),
     WarningSubType(WarningSubtypeCode),
 }
 
-#[derive(Clone, Debug, Deserialize, EnumString, PartialEq)]
+#[derive(Clone, Debug, Deserialize, EnumString, Eq, PartialEq)]
 pub enum Action {
     ISSUE,
     REISSUE,

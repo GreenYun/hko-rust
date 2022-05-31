@@ -3,7 +3,7 @@
 
 use strum_macros::Display;
 
-#[derive(Clone, Debug, Display, PartialEq)]
+#[derive(Clone, Debug, Display, Eq, PartialEq)]
 pub enum SeaStation {
     /// Cheung Chau
     CCH,
@@ -35,7 +35,7 @@ pub enum SeaStation {
     WAG,
 }
 
-#[derive(Clone, Debug, Display, PartialEq)]
+#[derive(Clone, Debug, Display, Eq, PartialEq)]
 pub enum TempStation {
     /// Cheung Chau
     CCH,
@@ -91,7 +91,7 @@ pub enum TempStation {
     TKL,
     /// Tai Mo Shan
     TMS,
-    /// Tai Po
+    /// Tai Po (Conservation Studies Centre)
     TPO,
     /// Tuen Mun Children and Juvenile Home
     TU1,
@@ -111,11 +111,13 @@ pub enum TempStation {
     WLP,
     /// Wong Tai Sin
     WTS,
+    /// Tai Po (Yuan Chau Tsai Park)
+    YCT,
     /// Yuen Long Park
     YLP,
 }
 
-#[derive(Clone, Debug, Display, PartialEq)]
+#[derive(Clone, Debug, Display, Eq, PartialEq)]
 pub enum WeatherStation {
     /// Cheung Chau
     CCH,
@@ -169,8 +171,6 @@ pub enum WeatherStation {
     TBT,
     /// Ta Kwu Ling
     TKL,
-    /// Tai Po
-    TPO,
     /// Tuen Mun
     TUN,
     /// Tsuen Wan Shing Mun Valley
@@ -181,6 +181,8 @@ pub enum WeatherStation {
     TY1,
     /// Wong Tai Sin
     WTS,
+    /// Tai Po
+    TCT,
     /// Yuen Long Park
     YLP,
     /// Yuen Ng Fan

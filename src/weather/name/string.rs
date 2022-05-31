@@ -9,9 +9,7 @@ use crate::{
 
 impl EnumNameDesc for Name {
     fn name(&self, lang: Lang) -> String {
-        format!(
-            "{}",
-            enum_lang_matches! {
+        enum_lang_matches! {
                 self, lang,
                 Name::Sunny                       => "Sunny", "陽光充沛", "阳光充沛",
                 Name::SunnyPeriods                => "Sunny Periods", "間有陽光", "间有阳光",
@@ -46,75 +44,61 @@ impl EnumNameDesc for Name {
                 Name::Warm  => "Warm", "暖", "暖",
                 Name::Cool  => "Cool", "涼", "凉",
                 Name::Cold  => "Cold", "冷", "冷",
-            }
-        )
+            }.to_owned()
     }
+
     fn desc(&self, lang: Lang) -> String {
         match self {
-            Name::Fine0 => format!(
-                "{}",
-                match lang {
-                    Lang::EN => "Fine ( use only in night-time on 1st of the Lunar Month )",
-                    Lang::TC => "天色良好(只在農曆第一日晚間使用)",
-                    Lang::SC => "天色良好(只在农曆第一日晚间使用)",
-                },
-            ),
-            Name::Fine1 => format!(
-                "{}",
-                match lang {
-                    Lang::EN => "Fine ( use only in night-time on 2nd to 6th of the Lunar Month )",
-                    Lang::TC => "天色良好(只在農曆第二日至第六日晚間使用)",
-                    Lang::SC => "天色良好(只在农曆第二日至第六日晚间使用)",
-                },
-            ),
-            Name::Fine2 => format!(
-                "{}",
-                match lang {
-                    Lang::EN => "Fine ( use only in night-time during 7th to 13th of Lunar Month )",
-                    Lang::TC => "天色良好(只在農曆第七日至第十三日晚間使用)",
-                    Lang::SC => "天色良好(只在农曆第七日至第十三日晚间使用)",
-                },
-            ),
-            Name::Fine3 => format!(
-                "{}",
-                match lang {
-                    Lang::EN => "Fine ( use only in night-time during 14th to 17th of Lunar Month )",
-                    Lang::TC => "天色良好(只在農曆第十四日至第十七日晚間使用)",
-                    Lang::SC => "天色良好(只在农曆第十四日至第十七日晚间使用)",
-                },
-            ),
-            Name::Fine4 => format!(
-                "{}",
-                match lang {
-                    Lang::EN => "Fine ( use only in night-time during 18th to 24th of Lunar Month )",
-                    Lang::TC => "天色良好(只在農曆第十八日至第二十四日晚間使用)",
-                    Lang::SC => "天色良好(只在农曆第十八日至第二十四日晚间使用)",
-                },
-            ),
-            Name::Fine5 => format!(
-                "{}",
-                match lang {
-                    Lang::EN => "Mainly Cloudy ( use only in night-time during 25th to 30th of Lunar Month )",
-                    Lang::TC => "天色良好(只在農曆第二十五日至第三十日晚間使用)",
-                    Lang::SC => "天色良好(只在农曆第二十五日至第三十日晚间使用)",
-                },
-            ),
-            Name::MainlyCloudy => format!(
-                "{}",
-                match lang {
-                    Lang::EN => "Mainly Cloudy ( use only in night-time )",
-                    Lang::TC => "大致多雲(只在晚間使用)",
-                    Lang::SC => "大致多云(只在晚间使用)",
-                },
-            ),
-            Name::MainlyFine => format!(
-                "{}",
-                match lang {
-                    Lang::EN => "Mainly Fine ( use only in night-time )",
-                    Lang::TC => "天色大致良好(只在晚間使用)",
-                    Lang::SC => "天色大致良好(只在晚间使用)",
-                },
-            ),
+            Name::Fine0 => match lang {
+                Lang::EN => "Fine ( use only in night-time on 1st of the Lunar Month )",
+                Lang::TC => "天色良好(只在農曆第一日晚間使用)",
+                Lang::SC => "天色良好(只在农曆第一日晚间使用)",
+            }
+            .to_owned(),
+            Name::Fine1 => match lang {
+                Lang::EN => "Fine ( use only in night-time on 2nd to 6th of the Lunar Month )",
+                Lang::TC => "天色良好(只在農曆第二日至第六日晚間使用)",
+                Lang::SC => "天色良好(只在农曆第二日至第六日晚间使用)",
+            }
+            .to_owned(),
+            Name::Fine2 => match lang {
+                Lang::EN => "Fine ( use only in night-time during 7th to 13th of Lunar Month )",
+                Lang::TC => "天色良好(只在農曆第七日至第十三日晚間使用)",
+                Lang::SC => "天色良好(只在农曆第七日至第十三日晚间使用)",
+            }
+            .to_owned(),
+            Name::Fine3 => match lang {
+                Lang::EN => "Fine ( use only in night-time during 14th to 17th of Lunar Month )",
+                Lang::TC => "天色良好(只在農曆第十四日至第十七日晚間使用)",
+                Lang::SC => "天色良好(只在农曆第十四日至第十七日晚间使用)",
+            }
+            .to_owned(),
+            Name::Fine4 => match lang {
+                Lang::EN => "Fine ( use only in night-time during 18th to 24th of Lunar Month )",
+                Lang::TC => "天色良好(只在農曆第十八日至第二十四日晚間使用)",
+                Lang::SC => "天色良好(只在农曆第十八日至第二十四日晚间使用)",
+            }
+            .to_owned(),
+            Name::Fine5 => match lang {
+                Lang::EN => {
+                    "Mainly Cloudy ( use only in night-time during 25th to 30th of Lunar Month )"
+                }
+                Lang::TC => "天色良好(只在農曆第二十五日至第三十日晚間使用)",
+                Lang::SC => "天色良好(只在农曆第二十五日至第三十日晚间使用)",
+            }
+            .to_owned(),
+            Name::MainlyCloudy => match lang {
+                Lang::EN => "Mainly Cloudy ( use only in night-time )",
+                Lang::TC => "大致多雲(只在晚間使用)",
+                Lang::SC => "大致多云(只在晚间使用)",
+            }
+            .to_owned(),
+            Name::MainlyFine => match lang {
+                Lang::EN => "Mainly Fine ( use only in night-time )",
+                Lang::TC => "天色大致良好(只在晚間使用)",
+                Lang::SC => "天色大致良好(只在晚间使用)",
+            }
+            .to_owned(),
             _ => self.name(lang),
         }
     }

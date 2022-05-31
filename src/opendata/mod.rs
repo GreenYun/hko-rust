@@ -40,7 +40,7 @@ use strum_macros::Display;
 
 pub use self::{clm::*, rs::*, station::*};
 
-#[derive(Clone, Debug, Display, PartialEq)]
+#[derive(Clone, Debug, Display, Eq, PartialEq)]
 #[strum(serialize_all = "lowercase")]
 pub enum ResponseFormat {
     JSON,

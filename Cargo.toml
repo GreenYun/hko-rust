@@ -1,13 +1,15 @@
 [package]
 authors = ["GreenYun <microsoft.zh.cn@gmail.com>"]
 description = "Rust library for Hong Kong Observatory Open Data API"
+documentation = "https://docs.rs/hko"
 edition = "2021"
 include = ["src/**/*.rs", "!**/test.rs", "README.md", "LICENSE"]
 keywords = ["weather", "hong-kong", "observatory"]
 license = "MIT"
 name = "hko"
+readme = "README.md"
 repository = "https://github.com/GreenYun/hko-rust"
-version = "1.6.4"
+version = "1.7.0"
 
 [features]
 fetch = ["anyhow", "reqwest"]

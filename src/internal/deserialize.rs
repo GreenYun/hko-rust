@@ -38,7 +38,7 @@ where
             FixedOffset::east(8 * 60 * 60)
                 .from_local_date(&naive_date)
                 .single()
-                .ok_or(DeError::invalid_value(Unexpected::Str(value), &EXPECTING))
+                .ok_or_else(|| DeError::invalid_value(Unexpected::Str(value), &EXPECTING))
         }
     }
 

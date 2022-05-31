@@ -14,7 +14,7 @@ pub trait API {
             "https://data.weather.gov.hk/weatherAPI/opendata/{}.php?dataType={}&lang={}",
             Self::BASE,
             Self::DATATYPE,
-            lang.to_string()
+            lang
         )
     }
 }

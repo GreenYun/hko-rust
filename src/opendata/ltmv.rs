@@ -61,7 +61,7 @@ impl FromStr for Response {
 
                             ValUnit {
                                 value,
-                                unit: unit.trim().to_string(),
+                                unit: unit.trim().to_owned(),
                             }
                         };
 
@@ -109,7 +109,7 @@ impl FromStr for Response {
 
                             ValUnit {
                                 value,
-                                unit: unit.trim().to_string(),
+                                unit: unit.trim().to_owned(),
                             }
                         };
 
@@ -128,10 +128,10 @@ impl FromStr for Response {
 pub fn url(lang: Lang, response_format: Option<ResponseFormat>) -> String {
     format!(
         concat_url!(LTMV, "&lang={}{}"),
-        lang.to_string(),
+        lang,
         response_format
             .map(|f| format!("&rformat={}", f))
-            .unwrap_or(String::new()),
+            .unwrap_or_default(),
     )
 }
 

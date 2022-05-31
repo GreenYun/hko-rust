@@ -120,8 +120,10 @@ macro_rules! impl_rs {
             day: Option<u32>,
             response_format: Option<ResponseFormat>,
         ) -> Result<String, APIRequestError> {
-            if !matches!(year, 2018..=2023) {
-                return Err(APIRequestError("year must be 2018-2023".to_owned()));
+            use std::fmt::Write;
+
+            if !matches!(year, 2018..=2024) {
+                return Err(APIRequestError("year must be 2018-2024".to_owned()));
             }
 
             let mut s = String::new();
@@ -130,7 +132,8 @@ macro_rules! impl_rs {
                 if !(1..=12).contains(&month) {
                     return Err(APIRequestError("month must be 1-12".to_owned()));
                 }
-                s.push_str(&format!("&month={}", month));
+
+                let _ = write!(s, "&month={}", month);
             }
 
             if let Some(day) = day {
@@ -139,7 +142,8 @@ macro_rules! impl_rs {
                         "day must be 1-31 and month must be specified".to_owned(),
                     ));
                 }
-                s.push_str(&format!("&day={}", day));
+
+                let _ = write!(s, "&day={}", day);
             }
 
             Ok(format!(
@@ -147,7 +151,7 @@ macro_rules! impl_rs {
                 year,
                 response_format
                     .map(|f| format!("&rformat={}", f))
-                    .unwrap_or(String::new()),
+                    .unwrap_or_default(),
                 s,
             ))
         }

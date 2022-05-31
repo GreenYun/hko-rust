@@ -9,26 +9,28 @@ use serde::Deserialize;
 use crate::fetch::impl_api;
 
 /// Locally Felt Earth Tremor Report
+///
+/// The response from HKO may be just an empty JSON object.
 #[derive(Clone, Debug, Deserialize)]
 pub struct FeltReport {
     #[serde(rename = "lat")]
-    pub latitude: f64,
+    pub latitude: Option<f64>,
 
     #[serde(rename = "lon")]
-    pub longitude: f64,
+    pub longitude: Option<f64>,
 
     /// Richter magnitude scale
     #[serde(rename = "mag")]
-    pub magnitude: f64,
-    pub intensity: i64,
-    pub region: String,
-    pub details: Vec<String>,
+    pub magnitude: Option<f64>,
+    pub intensity: Option<i64>,
+    pub region: Option<String>,
+    pub details: Option<Vec<String>>,
 
     #[serde(rename = "ptime")]
-    pub occur_time: DateTime<FixedOffset>,
+    pub occur_time: Option<DateTime<FixedOffset>>,
 
     #[serde(rename = "updateTime")]
-    pub update_time: DateTime<FixedOffset>,
+    pub update_time: Option<DateTime<FixedOffset>>,
 }
 
 impl_api!(FeltReport, earthquake, feltearthquake);

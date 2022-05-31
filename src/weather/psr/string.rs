@@ -9,23 +9,19 @@ use crate::{
 
 impl EnumNameDesc for PSR {
     fn name(&self, lang: Lang) -> String {
-        format!(
-            "{}",
-            enum_lang_matches! {
-                self, lang,
-                PSR::High       => "High",        "高",   "高",
-                PSR::MediumHigh => "Medium High", "中高", "中高",
-                PSR::Medium     => "Medium",      "中",   "中",
-                PSR::MediumLow  => "Medium Low",  "中低", "中低",
-                PSR::Low        => "Low",         "低",   "低",
-            }
-        )
+        enum_lang_matches! {
+            self, lang,
+            PSR::High       => "High",        "高",   "高",
+            PSR::MediumHigh => "Medium High", "中高", "中高",
+            PSR::Medium     => "Medium",      "中",   "中",
+            PSR::MediumLow  => "Medium Low",  "中低", "中低",
+            PSR::Low        => "Low",         "低",   "低",
+        }
+        .to_owned()
     }
 
     fn desc(&self, lang: Lang) -> String {
-        format!(
-            "{}",
-            enum_lang_matches! {
+        enum_lang_matches! {
                 self, lang,
                 PSR::High =>
                     r#"For every 100 forecasts with a "high" probability, there are about 70 times or more with an average accumulated rainfall of 10 mm or above in actual observation."#,
@@ -48,6 +44,6 @@ impl EnumNameDesc for PSR {
                     r#"每100次概率為「低」的預測中，實際上約有少於30次平均累積雨量達到10毫米或以上。"#,
                     r#"每100次概率为「低」的预测中，实际上约有少于30次平均累积雨量达到10毫米或以上。"#,
             }
-        )
+        .to_owned()
     }
 }

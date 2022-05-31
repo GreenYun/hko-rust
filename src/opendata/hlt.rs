@@ -125,9 +125,9 @@ pub fn url(
     year: i32,
     response_format: Option<ResponseFormat>,
 ) -> Result<String, APIRequestError> {
-    if !matches!(year, 2021..=2023) {
+    if !matches!(year, 2021..=2024) {
         return Err(APIRequestError(format!(
-            "year must be 2021-2023, got {}",
+            "year must be 2021-2024, got {}",
             year
         )));
     }
@@ -138,7 +138,7 @@ pub fn url(
         year,
         response_format
             .map(|f| format!("&rformat={}", f))
-            .unwrap_or(String::new()),
+            .unwrap_or_default(),
     ))
 }
 

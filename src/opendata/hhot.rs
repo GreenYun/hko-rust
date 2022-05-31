@@ -54,7 +54,7 @@ impl FromStr for Response {
 
                         Some(
                             v.get(2..)?
-                                .into_iter()
+                                .iter()
                                 .enumerate()
                                 .filter_map(|(i, s)| {
                                     let height = s.parse().ok()?;
@@ -64,7 +64,7 @@ impl FromStr for Response {
                                         day,
                                         hour: hours
                                             .get(i)
-                                            .map(|&h| h)
+                                            .copied()
                                             .unwrap_or(i.try_into().unwrap_or(0) + 1),
                                         height,
                                     })
@@ -118,20 +118,18 @@ impl FromStr for Response {
                         Some(
                             data.into_iter()
                                 .enumerate()
-                                .filter_map(|(h, height)| {
-                                    Some(ResponseUnit {
-                                        month,
-                                        day,
-                                        hour: if has_header {
-                                            hours
-                                                .get(h)
-                                                .map(|&h| h)
-                                                .unwrap_or(h.try_into().unwrap_or(0) + 1)
-                                        } else {
-                                            h.try_into().unwrap_or(0) + 1
-                                        },
-                                        height,
-                                    })
+                                .map(|(h, height)| ResponseUnit {
+                                    month,
+                                    day,
+                                    hour: if has_header {
+                                        hours
+                                            .get(h)
+                                            .copied()
+                                            .unwrap_or(h.try_into().unwrap_or(0) + 1)
+                                    } else {
+                                        h.try_into().unwrap_or(0) + 1
+                                    },
+                                    height,
                                 })
                                 .collect::<Vec<_>>(),
                         )
@@ -151,8 +149,10 @@ pub fn url(
     hour: Option<u32>,
     response_format: Option<ResponseFormat>,
 ) -> Result<String, APIRequestError> {
-    if !matches!(year, 2021..=2023) {
-        return Err(APIRequestError("year must be 2021-2023".to_owned()));
+    use std::fmt::Write;
+
+    if !matches!(year, 2021..=2024) {
+        return Err(APIRequestError("year must be 2021-2024".to_owned()));
     }
 
     let mut s = String::new();
@@ -161,7 +161,8 @@ pub fn url(
         if !(1..=12).contains(&month) {
             return Err(APIRequestError("month must be 1-12".to_owned()));
         }
-        s.push_str(&format!("&month={}", month));
+
+        let _ = write!(s, "&month={}", month);
     }
 
     if let Some(day) = day {
@@ -170,7 +171,8 @@ pub fn url(
                 "day must be 1-31 and month must be specified".to_owned(),
             ));
         }
-        s.push_str(&format!("&day={}", day));
+
+        let _ = write!(s, "&day={}", day);
     }
 
     if let Some(hour) = hour {
@@ -179,7 +181,8 @@ pub fn url(
                 "hour must be 1-24 and day must be specified".to_owned(),
             ));
         }
-        s.push_str(&format!("&hour={}", hour));
+
+        let _ = write!(s, "&hour={}", hour);
     }
 
     Ok(format!(
@@ -188,7 +191,7 @@ pub fn url(
         year,
         response_format
             .map(|f| format!("&rformat={}", f))
-            .unwrap_or(String::new()),
+            .unwrap_or_default(),
         s,
     ))
 }

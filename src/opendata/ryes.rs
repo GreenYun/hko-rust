@@ -83,6 +83,12 @@ impl AreaData {
     }
 }
 
+impl Default for AreaData {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Main response type.
 #[derive(Clone, Debug)]
 pub struct Response {
@@ -140,7 +146,7 @@ impl FromStr for Response {
         let report_time_info_date = FixedOffset::east(8 * 60 * 60)
             .from_local_date(&report_time_info_date)
             .single()
-            .ok_or(DataError::SourceFormat("Invalid time".to_owned()))?;
+            .ok_or_else(|| DataError::SourceFormat("Invalid time".to_owned()))?;
 
         let bulletin_date_time =
             NaiveDateTime::parse_from_str(&(bulletin_date + &bulletin_time), "%Y%m%d%H%M")
@@ -148,7 +154,7 @@ impl FromStr for Response {
         let bulletin_date_time = FixedOffset::east(8 * 60 * 60)
             .from_local_datetime(&bulletin_date_time)
             .single()
-            .ok_or(DataError::SourceFormat("Invalid time".to_owned()))?;
+            .ok_or_else(|| DataError::SourceFormat("Invalid time".to_owned()))?;
 
         let note_desc = vec![note_desc, note_desc1, note_desc2, note_desc3]
             .into_iter()
@@ -179,9 +185,9 @@ impl FromStr for Response {
             if let Some(index) = ATTRIBUTES.iter().position(|&s| key.ends_with(s)) {
                 let area_key = key.strip_suffix(ATTRIBUTES[index]).unwrap().to_owned();
 
-                let data = area_data.entry(area_key).or_insert(AreaData::new());
+                let data = area_data.entry(area_key).or_insert_with(AreaData::new);
 
-                let val_to_f32 = || val.as_str().map(|s| s.parse().ok()).flatten();
+                let val_to_f32 = || val.as_str().and_then(|s| s.parse().ok());
 
                 match index {
                     0 => data.name = val.as_str().unwrap().to_owned(),
