@@ -1,7 +1,7 @@
 // Copyright (c) 2021 - 2022 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
-/// Generate the URI of specified weather icon, usually an HTTPS link.
+/// Generates the URI of specified weather icon, usually an HTTPS link.
 #[macro_export]
 macro_rules! icon_uri {
     ($i:expr) => {
@@ -12,7 +12,7 @@ macro_rules! icon_uri {
     };
 }
 
-/// Generate the URI of specified PSR icon, usually an HTTPS link.
+/// Generates the URI of specified PSR icon, usually an HTTPS link.
 #[macro_export]
 macro_rules! psr_icon_uri {
     ($psr:expr) => {

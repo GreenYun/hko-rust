@@ -9,7 +9,7 @@ A Rust library for Hong Kong Observatory Open Data API.
 
 ## Status
 
-Hong Kong Observatory Open Data API version 1.6 full coverage.
+Hong Kong Observatory Open Data API version 1.7 full coverage.
 
 ## Licence
 

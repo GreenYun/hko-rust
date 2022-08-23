@@ -8,7 +8,7 @@ pub trait API {
     const BASE: &'static str;
     const DATATYPE: &'static str;
 
-    /// Generate the URL for retrieving the data, in specified language.
+    /// Generates the URL for retrieving the data, in specified language.
     fn url(lang: Lang) -> String {
         format!(
             "https://data.weather.gov.hk/weatherAPI/opendata/{}.php?dataType={}&lang={}",

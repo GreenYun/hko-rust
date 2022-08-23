@@ -7,13 +7,13 @@ use crate::common::Lang;
 
 /// Trait to display the name and the description of values of an enumeration.
 pub trait EnumNameDesc: Debug {
-    /// Get the name of the item.
+    /// Gets the name of the item.
     #[allow(unused_variables)]
     fn name(&self, lang: Lang) -> String {
         format!("{:?}", self)
     }
 
-    /// Get the description of the item.
+    /// Gets the description of the item.
     #[allow(unused_variables)]
     fn desc(&self, lang: Lang) -> String {
         format!("{:?}", self)

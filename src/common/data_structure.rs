@@ -18,12 +18,6 @@ pub struct PlaceValUnit {
     pub unit: String,
 }
 
-/// One or more slice of messages.
-///
-/// [`String`](Message::String)`(`[`String`]`)` might be empty.
-#[derive(Clone, Debug, Deserialize)]
-#[serde(untagged)]
-pub enum Message {
-    String(String),
-    List(Vec<String>),
-}
+pub use message::Message;
+
+pub mod message;

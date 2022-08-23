@@ -83,6 +83,22 @@ pub enum UVIndexOrEmpty {
     Empty(String),
 }
 
+impl UVIndexOrEmpty {
+    /// Returns true if the result is [`Empty`](UVIndexOrEmpty::Empty).
+    pub const fn is_empty(&self) -> bool {
+        matches!(self, Self::Empty(_))
+    }
+
+    /// Converts from `UVIndexOrEmpty` to [`Option`]`<`[`UVIndex`]`>`.
+    pub fn uv_index(self) -> Option<UVIndex> {
+        match self {
+            #[allow(unused_variables)]
+            Self::Empty(x) => None,
+            Self::UVIndex(x) => Some(x),
+        }
+    }
+}
+
 /// The temperature, observed from specified `place`s, at specified `recode_time`.
 #[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
