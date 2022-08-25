@@ -40,7 +40,7 @@ macro_rules! impl_clm {
             fn from_str(s: &str) -> Result<Self, Self::Err> {
                 let raw = s.trim().as_bytes();
 
-                Ok(Self(match raw.get(0).ok_or(DataError::EarlyEOF)? {
+                Ok(Self(match raw.first().ok_or(DataError::EarlyEOF)? {
                     // JSON
                     b'{' => {
                         #[derive(Deserialize)]
@@ -113,7 +113,7 @@ macro_rules! impl_clm {
             }
         }
 
-        fn check_year(year: u32, station: TempStation) -> bool {
+        const fn check_year(year: u32, station: TempStation) -> bool {
             match station {
                 TempStation::CCH => year >= 1992,
                 TempStation::CWB => year >= 2018,
@@ -157,6 +157,7 @@ macro_rules! impl_clm {
             }
         }
 
+        #[allow(clippy::missing_errors_doc)]
         pub fn url(
             station: TempStation,
             year: Option<u32>,

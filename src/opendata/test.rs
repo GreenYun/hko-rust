@@ -1,6 +1,9 @@
 // Copyright (c) 2022 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
+#![allow(clippy::nursery)]
+#![allow(clippy::pedantic)]
+
 use std::str::FromStr;
 
 macro_rules! response_from_str {
@@ -211,7 +214,7 @@ async fn test_ltmv() {
 async fn test_ryes() {
     use super::ryes::Response;
 
-    let _ = Response::from_str(
+    std::mem::drop(Response::from_str(
         r#"{
     "ChekLapKokLocationName": "Chek Lap Kok",
     "ChekLapKokMaxTemp": "19.4",
@@ -329,7 +332,7 @@ async fn test_ryes() {
     "YuenNgFanLocationName": "Yuen Ng Fan",
     "YuenNgFanMicrosieverts": "0.12"
 }"#,
-    );
+    ));
 
     #[cfg(feature = "fetch")]
     {
@@ -337,15 +340,17 @@ async fn test_ryes() {
 
         use super::ryes::fetch;
 
-        let _ = fetch(
-            Date::from_utc(
-                NaiveDate::from_ymd(2022, 1, 1),
-                FixedOffset::east(8 * 60 * 60),
-            ),
-            None,
-            None,
-        )
-        .await
-        .unwrap();
+        std::mem::drop(
+            fetch(
+                Date::from_utc(
+                    NaiveDate::from_ymd(2022, 1, 1),
+                    FixedOffset::east(8 * 60 * 60),
+                ),
+                None,
+                None,
+            )
+            .await
+            .unwrap(),
+        );
     }
 }

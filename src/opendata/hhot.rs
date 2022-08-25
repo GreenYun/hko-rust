@@ -30,119 +30,116 @@ impl FromStr for Response {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let raw = s.trim().as_bytes();
 
-        Ok(Self(match raw.get(0).ok_or(DataError::EarlyEOF)? {
+        Ok(Self(if raw.first().ok_or(DataError::EarlyEOF)? == &b'{' {
             // JSON
-            b'{' => {
-                #[derive(Deserialize)]
-                struct JsonResponse {
-                    fields: Vec<String>,
-                    data: Vec<Vec<String>>,
-                }
-
-                let JsonResponse { fields, data } =
-                    serde_json::from_str(s).map_err(|e| DataError::SourceFormat(e.to_string()))?;
-
-                let hours = fields
-                    .into_iter()
-                    .filter_map(|x| x.parse::<u32>().ok())
-                    .collect::<Vec<_>>();
-
-                data.into_iter()
-                    .filter_map(|v| {
-                        let month = v.get(0)?.parse().ok()?;
-                        let day = v.get(1)?.parse().ok()?;
-
-                        Some(
-                            v.get(2..)?
-                                .iter()
-                                .enumerate()
-                                .filter_map(|(i, s)| {
-                                    let height = s.parse().ok()?;
-
-                                    Some(ResponseUnit {
-                                        month,
-                                        day,
-                                        hour: hours
-                                            .get(i)
-                                            .copied()
-                                            .unwrap_or(i.try_into().unwrap_or(0) + 1),
-                                        height,
-                                    })
-                                })
-                                .collect::<Vec<_>>(),
-                        )
-                    })
-                    .flatten()
-                    .collect()
+            #[derive(Deserialize)]
+            struct JsonResponse {
+                fields: Vec<String>,
+                data: Vec<Vec<String>>,
             }
 
-            // CSV
-            _ => {
-                #[derive(Deserialize)]
-                struct CsvResponse {
-                    mm: u32,
-                    dd: u32,
-                    data: Vec<f32>,
-                }
+            let JsonResponse { fields, data } =
+                serde_json::from_str(s).map_err(|e| DataError::SourceFormat(e.to_string()))?;
 
-                let has_header = s
-                    .chars()
-                    .any(|c| !c.is_ascii_digit() && !c.is_whitespace() && !matches!(c, ',' | '.'));
+            let hours = fields
+                .into_iter()
+                .filter_map(|x| x.parse::<u32>().ok())
+                .collect::<Vec<_>>();
 
-                let mut rdr = csv::ReaderBuilder::new()
-                    .has_headers(has_header)
-                    .from_reader(raw);
+            data.into_iter()
+                .filter_map(|v| {
+                    let month = v.get(0)?.parse().ok()?;
+                    let day = v.get(1)?.parse().ok()?;
 
-                let hours = if has_header {
-                    let header = rdr
-                        .headers()
-                        .map_err(|e| DataError::SourceFormat(e.to_string()))?;
+                    Some(
+                        v.get(2..)?
+                            .iter()
+                            .enumerate()
+                            .filter_map(|(i, s)| {
+                                let height = s.parse().ok()?;
 
-                    header
-                        .into_iter()
-                        .skip(2)
-                        .filter_map(|x| x.parse().ok())
-                        .collect()
-                } else {
-                    Vec::new()
-                };
-
-                rdr.records()
-                    .filter_map(|r| {
-                        let CsvResponse {
-                            mm: month,
-                            dd: day,
-                            data,
-                        } = r.ok()?.deserialize(None).ok()?;
-
-                        Some(
-                            data.into_iter()
-                                .enumerate()
-                                .map(|(h, height)| ResponseUnit {
+                                Some(ResponseUnit {
                                     month,
                                     day,
-                                    hour: if has_header {
-                                        hours
-                                            .get(h)
-                                            .copied()
-                                            .unwrap_or(h.try_into().unwrap_or(0) + 1)
-                                    } else {
-                                        h.try_into().unwrap_or(0) + 1
-                                    },
+                                    hour: hours
+                                        .get(i)
+                                        .copied()
+                                        .unwrap_or(i.try_into().unwrap_or(0) + 1),
                                     height,
                                 })
-                                .collect::<Vec<_>>(),
-                        )
-                    })
-                    .flatten()
-                    .collect()
+                            })
+                            .collect::<Vec<_>>(),
+                    )
+                })
+                .flatten()
+                .collect()
+        } else {
+            // CSV
+            #[derive(Deserialize)]
+            struct CsvResponse {
+                mm: u32,
+                dd: u32,
+                data: Vec<f32>,
             }
+
+            let has_header = s
+                .chars()
+                .any(|c| !c.is_ascii_digit() && !c.is_whitespace() && !matches!(c, ',' | '.'));
+
+            let mut rdr = csv::ReaderBuilder::new()
+                .has_headers(has_header)
+                .from_reader(raw);
+
+            let hours = if has_header {
+                let header = rdr
+                    .headers()
+                    .map_err(|e| DataError::SourceFormat(e.to_string()))?;
+
+                header
+                    .into_iter()
+                    .skip(2)
+                    .filter_map(|x| x.parse().ok())
+                    .collect()
+            } else {
+                Vec::new()
+            };
+
+            rdr.records()
+                .filter_map(|r| {
+                    let CsvResponse {
+                        mm: month,
+                        dd: day,
+                        data,
+                    } = r.ok()?.deserialize(None).ok()?;
+
+                    Some(
+                        data.into_iter()
+                            .enumerate()
+                            .map(|(h, height)| ResponseUnit {
+                                month,
+                                day,
+                                hour: if has_header {
+                                    hours
+                                        .get(h)
+                                        .copied()
+                                        .unwrap_or(h.try_into().unwrap_or(0) + 1)
+                                } else {
+                                    h.try_into().unwrap_or(0) + 1
+                                },
+                                height,
+                            })
+                            .collect::<Vec<_>>(),
+                    )
+                })
+                .flatten()
+                .collect()
         }))
     }
 }
 
+#[allow(clippy::missing_errors_doc)]
 pub fn url(
-    station: SeaStation,
+    station: &SeaStation,
     year: i32,
     month: Option<u32>,
     day: Option<u32>,
@@ -166,7 +163,7 @@ pub fn url(
     }
 
     if let Some(day) = day {
-        if !(1..=31).contains(&day) && month == None {
+        if !(1..=31).contains(&day) && month.is_none() {
             return Err(APIRequestError(
                 "day must be 1-31 and month must be specified".to_owned(),
             ));
@@ -176,7 +173,7 @@ pub fn url(
     }
 
     if let Some(hour) = hour {
-        if !(1..=24).contains(&hour) && day == None {
+        if !(1..=24).contains(&hour) && day.is_none() {
             return Err(APIRequestError(
                 "hour must be 1-24 and day must be specified".to_owned(),
             ));
@@ -209,7 +206,7 @@ pub async fn fetch(
     use reqwest::get;
 
     Ok(Response::from_str(
-        &get(url(station, year, month, day, hour, response_format)?)
+        &get(url(&station, year, month, day, hour, response_format)?)
             .await?
             .text()
             .await?,

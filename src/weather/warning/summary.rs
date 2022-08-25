@@ -26,6 +26,7 @@ use crate::fetch::impl_api;
 ///
 /// The `type` field of original response is omitted since the type matches the
 /// warning statement code and its subtype.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SummaryItem {

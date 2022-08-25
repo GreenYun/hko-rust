@@ -10,6 +10,7 @@ use crate::impl_display_traits;
 ///
 /// In particular circumstance, the code may store as [`String`] type, which is
 /// safe to convert to [`WarningStatementCode`].
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Deserialize, EnumString, Eq, PartialEq)]
 pub enum WarningStatementCode {
     WFIRE,   // Fire Danger Warning
@@ -27,6 +28,7 @@ pub enum WarningStatementCode {
 }
 
 /// Warning subtype code.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Deserialize, EnumString, Eq, PartialEq)]
 pub enum WarningSubtypeCode {
     WFIREY, // Yellow Fire Danger Warning

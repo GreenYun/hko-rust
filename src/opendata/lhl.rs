@@ -33,99 +33,96 @@ impl FromStr for Response {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let raw = s.trim().as_bytes();
 
-        Ok(Self(match raw.get(0).ok_or(DataError::EarlyEOF)? {
+        Ok(Self(if raw.first().ok_or(DataError::EarlyEOF)? == &b'{' {
             // JSON
-            b'{' => {
-                #[derive(Deserialize)]
-                struct JsonResponse {
-                    data: Vec<Vec<String>>,
-                }
-
-                let JsonResponse { data } =
-                    serde_json::from_str(s).map_err(|e| DataError::SourceFormat(e.to_string()))?;
-
-                data.into_iter()
-                    .filter_map(|v| {
-                        let time = v.get(0)?.split('-').collect::<Vec<_>>();
-                        let start_time =
-                            NaiveDateTime::parse_from_str(time.get(0)?, "%Y%m%d%H%M").ok()?;
-                        let start_time = FixedOffset::east(8 * 60 * 60)
-                            .from_local_datetime(&start_time)
-                            .single()?;
-
-                        let end_time =
-                            NaiveDateTime::parse_from_str(time.get(1)?, "%Y%m%d%H%M").ok()?;
-                        let end_time = FixedOffset::east(8 * 60 * 60)
-                            .from_local_datetime(&end_time)
-                            .single()?;
-
-                        let r#type = v.get(1)?.clone();
-                        let region = v.get(2)?.clone();
-                        let count = (*v.get(3)?).parse::<u32>().ok()?;
-
-                        Some(ResponseUnit {
-                            start_time,
-                            end_time,
-                            r#type,
-                            region,
-                            count,
-                        })
-                    })
-                    .collect()
+            #[derive(Deserialize)]
+            struct JsonResponse {
+                data: Vec<Vec<String>>,
             }
 
+            let JsonResponse { data } =
+                serde_json::from_str(s).map_err(|e| DataError::SourceFormat(e.to_string()))?;
+
+            data.into_iter()
+                .filter_map(|v| {
+                    let time = v.get(0)?.split('-').collect::<Vec<_>>();
+                    let start_time =
+                        NaiveDateTime::parse_from_str(time.first()?, "%Y%m%d%H%M").ok()?;
+                    let start_time = FixedOffset::east(8 * 60 * 60)
+                        .from_local_datetime(&start_time)
+                        .single()?;
+
+                    let end_time =
+                        NaiveDateTime::parse_from_str(time.get(1)?, "%Y%m%d%H%M").ok()?;
+                    let end_time = FixedOffset::east(8 * 60 * 60)
+                        .from_local_datetime(&end_time)
+                        .single()?;
+
+                    let r#type = v.get(1)?.clone();
+                    let region = v.get(2)?.clone();
+                    let count = (*v.get(3)?).parse::<u32>().ok()?;
+
+                    Some(ResponseUnit {
+                        start_time,
+                        end_time,
+                        r#type,
+                        region,
+                        count,
+                    })
+                })
+                .collect()
+        } else {
             // CSV
-            _ => {
-                #[derive(Deserialize)]
-                struct CsvResponse {
-                    time: String,
-                    r#type: String,
-                    region: String,
-                    count: u32,
-                }
-
-                let mut rdr = csv::ReaderBuilder::new()
-                    .has_headers(false)
-                    .from_reader(raw);
-
-                rdr.records()
-                    .filter_map(|r| {
-                        let CsvResponse {
-                            time,
-                            r#type,
-                            region,
-                            count,
-                        } = r.ok()?.deserialize(None).ok()?;
-
-                        let time = time.split('-').collect::<Vec<_>>();
-
-                        let start_time =
-                            NaiveDateTime::parse_from_str(time.get(0)?, "%Y%m%d%H%M").ok()?;
-                        let start_time = FixedOffset::east(8 * 60 * 60)
-                            .from_local_datetime(&start_time)
-                            .single()?;
-
-                        let end_time =
-                            NaiveDateTime::parse_from_str(time.get(1)?, "%Y%m%d%H%M").ok()?;
-                        let end_time = FixedOffset::east(8 * 60 * 60)
-                            .from_local_datetime(&end_time)
-                            .single()?;
-
-                        Some(ResponseUnit {
-                            start_time,
-                            end_time,
-                            r#type,
-                            region,
-                            count,
-                        })
-                    })
-                    .collect()
+            #[derive(Deserialize)]
+            struct CsvResponse {
+                time: String,
+                r#type: String,
+                region: String,
+                count: u32,
             }
+
+            let mut rdr = csv::ReaderBuilder::new()
+                .has_headers(false)
+                .from_reader(raw);
+
+            rdr.records()
+                .filter_map(|r| {
+                    let CsvResponse {
+                        time,
+                        r#type,
+                        region,
+                        count,
+                    } = r.ok()?.deserialize(None).ok()?;
+
+                    let time = time.split('-').collect::<Vec<_>>();
+
+                    let start_time =
+                        NaiveDateTime::parse_from_str(time.first()?, "%Y%m%d%H%M").ok()?;
+                    let start_time = FixedOffset::east(8 * 60 * 60)
+                        .from_local_datetime(&start_time)
+                        .single()?;
+
+                    let end_time =
+                        NaiveDateTime::parse_from_str(time.get(1)?, "%Y%m%d%H%M").ok()?;
+                    let end_time = FixedOffset::east(8 * 60 * 60)
+                        .from_local_datetime(&end_time)
+                        .single()?;
+
+                    Some(ResponseUnit {
+                        start_time,
+                        end_time,
+                        r#type,
+                        region,
+                        count,
+                    })
+                })
+                .collect()
         }))
     }
 }
 
-pub fn url(lang: Lang, response_format: Option<ResponseFormat>) -> String {
+#[must_use]
+pub fn url(lang: &Lang, response_format: Option<ResponseFormat>) -> String {
     format!(
         concat_url!(LHL, "&lang={}{}"),
         lang,
@@ -144,6 +141,6 @@ pub async fn fetch(
     use reqwest::get;
 
     Ok(Response::from_str(
-        &get(url(lang, response_format)).await?.text().await?,
+        &get(url(&lang, response_format)).await?.text().await?,
     )?)
 }

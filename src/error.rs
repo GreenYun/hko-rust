@@ -9,6 +9,7 @@ use std::{
 };
 
 /// The error type returned when parsing a response.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug)]
 pub enum DataError {
     /// The response is empty.
@@ -21,8 +22,8 @@ pub enum DataError {
 impl Display for DataError {
     fn fmt(&self, f: &mut Formatter) -> Result {
         match self {
-            DataError::SourceFormat(s) => f.write_fmt(format_args!("Source format error: {}", s)),
-            DataError::EarlyEOF => "early EOF found".fmt(f),
+            Self::SourceFormat(s) => f.write_fmt(format_args!("Source format error: {}", s)),
+            Self::EarlyEOF => "early EOF found".fmt(f),
         }
     }
 }
@@ -30,6 +31,7 @@ impl Display for DataError {
 impl Error for DataError {}
 
 /// The error type returned when trying to convert invalid string to PSR type.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Copy, Debug)]
 pub struct InvalidPSRError;
 
@@ -42,6 +44,7 @@ impl Display for InvalidPSRError {
 impl Error for InvalidPSRError {}
 
 /// The error type returned when encountering illegal parameters in API request.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug)]
 pub struct APIRequestError(pub String);
 

@@ -62,7 +62,8 @@ pub struct AreaData {
 }
 
 impl AreaData {
-    pub fn new() -> Self {
+    #[must_use]
+    pub const fn new() -> Self {
         Self {
             name: String::new(),
             microsieverts: None,
@@ -163,7 +164,7 @@ impl FromStr for Response {
 
         let mut area_data = HashMap::new();
 
-        extra_data.into_iter().for_each(|(key, val)| {
+        for (key, val) in extra_data {
             const ATTRIBUTES: [&str; 15] = [
                 "LocationName",
                 "Microsieverts",
@@ -208,7 +209,7 @@ impl FromStr for Response {
                     _ => unreachable!(),
                 };
             }
-        });
+        }
 
         Ok(Self {
             hong_kong_desc,
@@ -220,6 +221,7 @@ impl FromStr for Response {
     }
 }
 
+#[must_use]
 pub fn url(date: Date<FixedOffset>, lang: Option<Lang>, station: Option<WeatherStation>) -> String {
     format!(
         concat_url!(RYES, "&date={}{}{}"),

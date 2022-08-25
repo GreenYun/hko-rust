@@ -136,15 +136,15 @@ impl EnumNameDesc for WarningSubtypeCode {
 impl EnumNameDesc for Code {
     fn name(&self, lang: Lang) -> String {
         match self {
-            Code::WarningStatement(w) => w.name(lang),
-            Code::WarningSubType(w) => w.name(lang),
+            Self::WarningStatement(w) => w.name(lang),
+            Self::WarningSubType(w) => w.name(lang),
         }
     }
 
     fn desc(&self, lang: Lang) -> String {
         match self {
-            Code::WarningStatement(w) => w.desc(lang),
-            Code::WarningSubType(w) => w.desc(lang),
+            Self::WarningStatement(w) => w.desc(lang),
+            Self::WarningSubType(w) => w.desc(lang),
         }
     }
 }

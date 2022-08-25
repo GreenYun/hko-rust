@@ -23,11 +23,11 @@ impl FromStr for PSR {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "High" | "高" => Ok(PSR::High),
-            "Medium High" | "中高" => Ok(PSR::MediumHigh),
-            "Medium" | "中" => Ok(PSR::Medium),
-            "Medium Low" | "中低" => Ok(PSR::MediumLow),
-            "Low" | "低" => Ok(PSR::Low),
+            "High" | "高" => Ok(Self::High),
+            "Medium High" | "中高" => Ok(Self::MediumHigh),
+            "Medium" | "中" => Ok(Self::Medium),
+            "Medium Low" | "中低" => Ok(Self::MediumLow),
+            "Low" | "低" => Ok(Self::Low),
             _ => Err(InvalidPSRError),
         }
     }

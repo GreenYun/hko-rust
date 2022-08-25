@@ -1,6 +1,9 @@
 // Copyright (c) 2021 - 2022 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
+#![allow(clippy::nursery)]
+#![allow(clippy::pedantic)]
+
 #[tokio::test]
 async fn current_test() {
     use num_traits::FromPrimitive;
@@ -121,7 +124,7 @@ async fn local_test() {
     let local: Local = serde_json::from_str(test_input).unwrap();
     println!("{:?}", local);
 
-    assert!(local.general_situation.len() > 0);
+    assert!(!local.general_situation.is_empty());
 
     #[cfg(feature = "fetch")]
     {
@@ -426,7 +429,7 @@ async fn tips_test() {
 
     let tips: Tips = serde_json::from_str(test_input).unwrap();
     println!("{:?}", tips);
-    assert_eq!(tips.tips[1].desc, Some(format!("Tips 2")));
+    assert_eq!(tips.tips[1].desc, Some("Tips 2".to_owned()));
 
     #[cfg(feature = "fetch")]
     {

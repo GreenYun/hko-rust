@@ -43,6 +43,7 @@ impl<'a> Iterator for Iter<'a> {
 /// One or more slice of messages.
 ///
 /// [`String`](Message::String)`(`[`String`]`)` might be empty.
+#[allow(clippy::unsafe_derive_deserialize)]
 #[derive(Clone, Debug, Deserialize)]
 #[serde(untagged)]
 pub enum Message {
@@ -52,11 +53,13 @@ pub enum Message {
 
 impl Message {
     /// Returns true if the result is [`String`](Message::String).
+    #[must_use]
     pub const fn is_string(&self) -> bool {
         matches!(self, Self::String(_))
     }
 
     /// Returns true if the result is [`List`](Message::List).
+    #[must_use]
     pub const fn is_list(&self) -> bool {
         !self.is_string()
     }
@@ -64,6 +67,8 @@ impl Message {
     /// Converts from `Message` to [`Option`]`<`[`String`]`>`.
     ///
     /// Converts `self` into an [`Option`]`<`[`String`]`>`, consuming `self`, and discarding the list, if any.
+    #[must_use]
+    #[allow(clippy::missing_const_for_fn)]
     pub fn string(self) -> Option<String> {
         match self {
             Self::String(x) => Some(x),
@@ -75,6 +80,8 @@ impl Message {
     /// Converts from `Message` to [`Option`]`<`[`Vec`]`<`[`String`]`>>`.
     ///
     /// Converts `self` into an [`Option`]`<`[`Vec`]`<`[`String`]`>>`, consuming `self`, and discarding the string, if any.
+    #[must_use]
+    #[allow(clippy::missing_const_for_fn)]
     pub fn list(self) -> Option<Vec<String>> {
         match self {
             #[allow(unused_variables)]
@@ -84,6 +91,7 @@ impl Message {
     }
 
     /// Returns an iterator over the possibly contained value.
+    #[must_use]
     pub fn iter(&self) -> Iter {
         let (ptr, len) = match self {
             Self::String(x) => (x as *const String, 1),

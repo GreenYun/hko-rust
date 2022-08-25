@@ -85,11 +85,14 @@ pub enum UVIndexOrEmpty {
 
 impl UVIndexOrEmpty {
     /// Returns true if the result is [`Empty`](UVIndexOrEmpty::Empty).
+    #[must_use]
     pub const fn is_empty(&self) -> bool {
         matches!(self, Self::Empty(_))
     }
 
     /// Converts from `UVIndexOrEmpty` to [`Option`]`<`[`UVIndex`]`>`.
+    #[must_use]
+    #[allow(clippy::missing_const_for_fn)]
     pub fn uv_index(self) -> Option<UVIndex> {
         match self {
             #[allow(unused_variables)]

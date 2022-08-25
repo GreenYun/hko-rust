@@ -3,6 +3,7 @@
 
 use strum_macros::Display;
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Display, Eq, PartialEq)]
 pub enum SeaStation {
     /// Cheung Chau
@@ -35,6 +36,7 @@ pub enum SeaStation {
     WAG,
 }
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Display, Eq, PartialEq)]
 pub enum TempStation {
     /// Cheung Chau
@@ -117,6 +119,7 @@ pub enum TempStation {
     YLP,
 }
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Display, Eq, PartialEq)]
 pub enum WeatherStation {
     /// Cheung Chau

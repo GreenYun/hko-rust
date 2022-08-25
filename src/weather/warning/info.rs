@@ -10,6 +10,7 @@ use super::{WarningStatementCode, WarningSubtypeCode};
 use crate::{common::Message, fetch::impl_api};
 
 /// The details of weather warning information.
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Deserialize)]
 pub struct InfoDetail {
     pub contents: Option<Message>,

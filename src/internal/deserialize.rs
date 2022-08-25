@@ -11,7 +11,8 @@ use serde::{
 
 use crate::weather::PSR;
 
-pub(crate) fn deserialize_yyyymmdd_to_datetime<'de, D>(
+#[allow(clippy::module_name_repetitions)]
+pub fn deserialize_yyyymmdd_to_datetime<'de, D>(
     deserializer: D,
 ) -> Result<Date<FixedOffset>, D::Error>
 where
@@ -45,7 +46,8 @@ where
     deserializer.deserialize_identifier(DateVisitor)
 }
 
-pub(crate) fn deserialize_to_psr<'de, D>(deserializer: D) -> Result<PSR, D::Error>
+#[allow(clippy::module_name_repetitions)]
+pub fn deserialize_to_psr<'de, D>(deserializer: D) -> Result<PSR, D::Error>
 where
     D: Deserializer<'de>,
 {
@@ -72,7 +74,8 @@ where
     deserializer.deserialize_identifier(PSRVisitor)
 }
 
-pub(crate) fn deserialize_to_bool<'de, D>(deserializer: D) -> Result<bool, D::Error>
+#[allow(clippy::module_name_repetitions)]
+pub fn deserialize_to_bool<'de, D>(deserializer: D) -> Result<bool, D::Error>
 where
     D: Deserializer<'de>,
 {
