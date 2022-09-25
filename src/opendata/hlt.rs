@@ -119,6 +119,7 @@ impl FromStr for Response {
 ///
 /// # Errors
 ///
+/// Returns [`APIRequestError`] if year out of historical range.
 pub fn url(
     station: &SeaStation,
     year: i32,

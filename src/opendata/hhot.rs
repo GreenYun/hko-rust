@@ -137,7 +137,11 @@ impl FromStr for Response {
     }
 }
 
-#[allow(clippy::missing_errors_doc)]
+/// Generate API URL from specified date.
+///
+/// # Errors
+///
+/// Returns [`APIRequestError`] if specified date is not illegal or out of historical range.
 pub fn url(
     station: &SeaStation,
     year: i32,

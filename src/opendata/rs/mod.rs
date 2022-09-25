@@ -114,6 +114,12 @@ macro_rules! impl_rs {
             }
         }
 
+        /// Generate API URL from specified date.
+        ///
+        /// # Errors
+        ///
+        /// Returns [`APIRequestError`] if specified date is not illegal or out
+        /// of historical range.
         pub fn url(
             year: i32,
             month: Option<u32>,

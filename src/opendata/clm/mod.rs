@@ -157,7 +157,12 @@ macro_rules! impl_clm {
             }
         }
 
-        #[allow(clippy::missing_errors_doc)]
+        /// Generate API URL from specified date.
+        ///
+        /// # Errors
+        ///
+        /// Returns [`APIRequestError`] if specified date is not illegal or out
+        /// of historical range.
         pub fn url(
             station: TempStation,
             year: Option<u32>,
