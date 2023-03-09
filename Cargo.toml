@@ -9,7 +9,7 @@ license = "MIT"
 name = "hko"
 readme = "README.md"
 repository = "https://github.com/GreenYun/hko-rust"
-version = "1.8.0"
+version = "1.8.1"
 
 [features]
 fetch = ["anyhow", "reqwest", "serde_json"]
