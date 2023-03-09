@@ -44,5 +44,6 @@ pub async fn fetch(date: NaiveDate) -> anyhow::Result<Response> {
     Ok(serde_json::from_str(&get(url(date).unwrap()).await?.text().await?)?)
 }
 
+#[cfg(feature = "test")]
 #[cfg(test)]
 mod test;
