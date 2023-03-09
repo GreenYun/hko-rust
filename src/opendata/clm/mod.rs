@@ -1,6 +1,8 @@
 // Copyright (c) 2022 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
+//! Provides data on daily maximum, mean and minimum temperatures.
+
 #[allow(unused_macros)]
 macro_rules! response_from_str {
     ($s:expr $(,)?) => {{
@@ -48,8 +50,8 @@ macro_rules! impl_clm {
                             data: Vec<Vec<String>>,
                         }
 
-                        let JsonResponse { data } = serde_json::from_str(s)
-                            .map_err(|e| DataError::SourceFormat(e.to_string()))?;
+                        let JsonResponse { data } =
+                            serde_json::from_str(s).map_err(|e| DataError::SourceFormat(e.to_string()))?;
 
                         data.into_iter()
                             .filter_map(|v| {

@@ -17,14 +17,14 @@ async fn message_test() {
     };
 
     let message: Message = serde_json::from_str(test_input).unwrap();
-    println!("{:?}", message);
+    println!("{message:?}");
 
     #[cfg(feature = "fetch")]
     {
         use crate::{common::Lang, fetch::fetch};
 
         let message: Message = fetch(Lang::EN).await.unwrap();
-        println!("{:?}", message);
+        println!("{message:?}");
     }
 }
 
@@ -51,13 +51,13 @@ async fn felt_report_test() {
     };
 
     let felt_report: FeltReport = serde_json::from_str(test_input).unwrap();
-    println!("{:?}", felt_report);
+    println!("{felt_report:?}");
 
     #[cfg(feature = "fetch")]
     {
         use crate::{common::Lang, fetch::fetch};
 
         let felt_report: FeltReport = fetch(Lang::EN).await.unwrap();
-        println!("{:?}", felt_report);
+        println!("{felt_report:?}");
     }
 }

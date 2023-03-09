@@ -1,7 +1,7 @@
 // Copyright (c) 2021 - 2022 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
-//! Common Structs, Enums, and Functions.
+//! Common Structs, Enums, and Functions
 
 pub use self::{data_structure::*, display::*, lang::Lang};
 

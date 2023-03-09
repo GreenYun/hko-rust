@@ -1,7 +1,8 @@
 // Copyright (c) 2021 - 2022 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
-//! Times and heights of astronomical high and low tides.
+//! Provides predicted tidal information. (Times and heights of astronomical
+//! high and low tides)
 
 use std::str::FromStr;
 
@@ -50,8 +51,7 @@ impl FromStr for Response {
                 data: Vec<Vec<String>>,
             }
 
-            let JsonResponse { data } =
-                serde_json::from_str(s).map_err(|e| DataError::SourceFormat(e.to_string()))?;
+            let JsonResponse { data } = serde_json::from_str(s).map_err(|e| DataError::SourceFormat(e.to_string()))?;
 
             data.into_iter()
                 .filter_map(|v| {
@@ -85,9 +85,7 @@ impl FromStr for Response {
                 data: Vec<String>,
             }
 
-            let mut rdr = csv::ReaderBuilder::new()
-                .has_headers(false)
-                .from_reader(raw);
+            let mut rdr = csv::ReaderBuilder::new().has_headers(false).from_reader(raw);
 
             rdr.records()
                 .filter_map(|r| {
@@ -126,19 +124,14 @@ pub fn url(
     response_format: Option<ResponseFormat>,
 ) -> Result<String, APIRequestError> {
     if !matches!(year, 2021..=2024) {
-        return Err(APIRequestError(format!(
-            "year must be 2021-2024, got {}",
-            year
-        )));
+        return Err(APIRequestError(format!("year must be 2021-2024, got {year}")));
     }
 
     Ok(format!(
         concat_url!(HLT, "&station={}&year={}{}"),
         station,
         year,
-        response_format
-            .map(|f| format!("&rformat={}", f))
-            .unwrap_or_default(),
+        response_format.map(|f| format!("&rformat={f}")).unwrap_or_default(),
     ))
 }
 
@@ -152,10 +145,7 @@ pub async fn fetch(
     use reqwest::get;
 
     Ok(Response::from_str(
-        &get(url(&station, year, response_format)?)
-            .await?
-            .text()
-            .await?,
+        &get(url(&station, year, response_format)?).await?.text().await?,
     )?)
 }
 

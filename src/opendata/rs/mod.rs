@@ -61,8 +61,8 @@ macro_rules! impl_rs {
                             data: Vec<Vec<String>>,
                         }
 
-                        let JsonResponse { data } = serde_json::from_str(s)
-                            .map_err(|e| DataError::SourceFormat(e.to_string()))?;
+                        let JsonResponse { data } =
+                            serde_json::from_str(s).map_err(|e| DataError::SourceFormat(e.to_string()))?;
 
                         data.into_iter()
                             .filter_map(|row| {
@@ -89,9 +89,7 @@ macro_rules! impl_rs {
                             set: String,
                         }
 
-                        let mut rdr = csv::ReaderBuilder::new()
-                            .has_headers(false)
-                            .from_reader(raw);
+                        let mut rdr = csv::ReaderBuilder::new().has_headers(false).from_reader(raw);
 
                         rdr.records()
                             .filter_map(|r| {
@@ -139,7 +137,7 @@ macro_rules! impl_rs {
                     return Err(APIRequestError("month must be 1-12".to_owned()));
                 }
 
-                let _ = write!(s, "&month={}", month);
+                let _: Result<_, _> = write!(s, "&month={month}");
             }
 
             if let Some(day) = day {
@@ -149,7 +147,7 @@ macro_rules! impl_rs {
                     ));
                 }
 
-                let _ = write!(s, "&day={}", day);
+                let _: Result<_, _> = write!(s, "&day={day}");
             }
 
             Ok(format!(
@@ -173,10 +171,7 @@ macro_rules! impl_rs {
             use reqwest::get;
 
             Ok(Response::from_str(
-                &get(url(year, month, day, response_format)?)
-                    .await?
-                    .text()
-                    .await?,
+                &get(url(year, month, day, response_format)?).await?.text().await?,
             )?)
         }
 

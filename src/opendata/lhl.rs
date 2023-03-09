@@ -1,7 +1,8 @@
 // Copyright (c) 2021 - 2022 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
-//! Cloud-to-ground and cloud-to-cloud lightning count.
+//! Provides cloud-to-ground and cloud-to-cloud lightning count over Hong Kong
+//! territory in the past hour. (the data provided is provisional)
 
 use std::str::FromStr;
 
@@ -40,23 +41,18 @@ impl FromStr for Response {
                 data: Vec<Vec<String>>,
             }
 
-            let JsonResponse { data } =
-                serde_json::from_str(s).map_err(|e| DataError::SourceFormat(e.to_string()))?;
+            let JsonResponse { data } = serde_json::from_str(s).map_err(|e| DataError::SourceFormat(e.to_string()))?;
 
             data.into_iter()
                 .filter_map(|v| {
                     let time = v.get(0)?.split('-').collect::<Vec<_>>();
-                    let start_time =
-                        NaiveDateTime::parse_from_str(time.first()?, "%Y%m%d%H%M").ok()?;
+                    let start_time = NaiveDateTime::parse_from_str(time.first()?, "%Y%m%d%H%M").ok()?;
                     let start_time = FixedOffset::east(8 * 60 * 60)
                         .from_local_datetime(&start_time)
                         .single()?;
 
-                    let end_time =
-                        NaiveDateTime::parse_from_str(time.get(1)?, "%Y%m%d%H%M").ok()?;
-                    let end_time = FixedOffset::east(8 * 60 * 60)
-                        .from_local_datetime(&end_time)
-                        .single()?;
+                    let end_time = NaiveDateTime::parse_from_str(time.get(1)?, "%Y%m%d%H%M").ok()?;
+                    let end_time = FixedOffset::east(8 * 60 * 60).from_local_datetime(&end_time).single()?;
 
                     let r#type = v.get(1)?.clone();
                     let region = v.get(2)?.clone();
@@ -81,9 +77,7 @@ impl FromStr for Response {
                 count: u32,
             }
 
-            let mut rdr = csv::ReaderBuilder::new()
-                .has_headers(false)
-                .from_reader(raw);
+            let mut rdr = csv::ReaderBuilder::new().has_headers(false).from_reader(raw);
 
             rdr.records()
                 .filter_map(|r| {
@@ -96,17 +90,13 @@ impl FromStr for Response {
 
                     let time = time.split('-').collect::<Vec<_>>();
 
-                    let start_time =
-                        NaiveDateTime::parse_from_str(time.first()?, "%Y%m%d%H%M").ok()?;
+                    let start_time = NaiveDateTime::parse_from_str(time.first()?, "%Y%m%d%H%M").ok()?;
                     let start_time = FixedOffset::east(8 * 60 * 60)
                         .from_local_datetime(&start_time)
                         .single()?;
 
-                    let end_time =
-                        NaiveDateTime::parse_from_str(time.get(1)?, "%Y%m%d%H%M").ok()?;
-                    let end_time = FixedOffset::east(8 * 60 * 60)
-                        .from_local_datetime(&end_time)
-                        .single()?;
+                    let end_time = NaiveDateTime::parse_from_str(time.get(1)?, "%Y%m%d%H%M").ok()?;
+                    let end_time = FixedOffset::east(8 * 60 * 60).from_local_datetime(&end_time).single()?;
 
                     Some(ResponseUnit {
                         start_time,
@@ -126,18 +116,13 @@ pub fn url(lang: &Lang, response_format: Option<ResponseFormat>) -> String {
     format!(
         concat_url!(LHL, "&lang={}{}"),
         lang,
-        response_format
-            .map(|f| format!("&rformat={}", f))
-            .unwrap_or_default(),
+        response_format.map(|f| format!("&rformat={f}")).unwrap_or_default(),
     )
 }
 
 #[cfg(feature = "fetch")]
 #[doc(cfg(feature = "fetch"))]
-pub async fn fetch(
-    lang: Lang,
-    response_format: Option<ResponseFormat>,
-) -> anyhow::Result<Response> {
+pub async fn fetch(lang: Lang, response_format: Option<ResponseFormat>) -> anyhow::Result<Response> {
     use reqwest::get;
 
     Ok(Response::from_str(

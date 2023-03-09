@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MIT
 
 //! Special weather tips.
+//!
+//! Provides special weather tips in force in Hong Kong.
 
 use chrono::{DateTime, FixedOffset};
 use serde::Deserialize;
@@ -20,7 +22,9 @@ pub struct Tip {
     pub update_time: Option<DateTime<FixedOffset>>,
 }
 
-/// Special weather tips type contains none or more tips.
+/// Special weather tips in force in Hong Kong.
+///
+/// Note: Special weather tips type contains none or more tips.
 #[derive(Clone, Debug, Deserialize)]
 pub struct Tips {
     #[serde(rename = "swt")]

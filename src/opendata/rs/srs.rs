@@ -1,6 +1,6 @@
 // Copyright (c) 2021 - 2022 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
-//! Times of sunrise, sun transit and sunset.
+//! Provides times of sunrise, sun transit, sunset.
 
 impl_rs!(SRS);

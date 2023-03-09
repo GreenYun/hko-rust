@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MIT
 
 //! 9-day weather forecast.
+//!
+//! Provides 9-day weather forecast of Hong Kong.
 
 use chrono::{Date, DateTime, FixedOffset};
 use serde::Deserialize;
@@ -74,7 +76,7 @@ pub struct SoilTemp {
     pub record_time: DateTime<FixedOffset>,
 }
 
-/// 9-day weather forecast.
+/// 9-day weather forecast of Hong Kong.
 #[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct NineDay {

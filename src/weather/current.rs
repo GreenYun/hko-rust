@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MIT
 
 //! Current weather report.
+//!
+//! Provides current weather report of Hong Kong.
 
 use chrono::{DateTime, FixedOffset};
 use serde::Deserialize;
@@ -31,7 +33,8 @@ pub struct Lightning {
 
 /// `max` and `min` rainfall measured in `place`.
 ///
-/// Either `max` or `min` may be missing, without default value. Leave to [`None`].
+/// Either `max` or `min` may be missing, without default value. Leave to
+/// [`None`].
 #[derive(Clone, Debug, Deserialize)]
 pub struct RainfallData {
     pub place: String,
@@ -102,7 +105,8 @@ impl UVIndexOrEmpty {
     }
 }
 
-/// The temperature, observed from specified `place`s, at specified `recode_time`.
+/// The temperature, observed from specified `place`s, at specified
+/// `recode_time`.
 #[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Temperature {
@@ -110,7 +114,8 @@ pub struct Temperature {
     pub record_time: DateTime<FixedOffset>,
 }
 
-/// The relative humidity, observed from specified `place`s, at specified `recode_time`.
+/// The relative humidity, observed from specified `place`s, at specified
+/// `recode_time`.
 #[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Humidity {
@@ -137,7 +142,7 @@ pub struct Icon {
     pub update_time: DateTime<FixedOffset>,
 }
 
-/// Current weather report.
+/// Current weather report of Hong Kong.
 #[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Current {

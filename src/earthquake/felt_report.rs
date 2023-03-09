@@ -2,15 +2,17 @@
 // SPDX-License-Identifier: MIT
 
 //! Locally Felt Earth Tremor Report
+//!
+//! Provides reports on earth tremors felt in Hong Kong.
 
 use chrono::{DateTime, FixedOffset};
 use serde::Deserialize;
 
 use crate::fetch::impl_api;
 
-/// Locally Felt Earth Tremor Report
+/// Reports on earth tremors felt in Hong Kong.
 ///
-/// The response from HKO may be just an empty JSON object.
+/// Note: The response from HKO may be just an empty JSON object.
 #[derive(Clone, Debug, Deserialize)]
 pub struct FeltReport {
     #[serde(rename = "lat")]

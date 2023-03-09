@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MIT
 
 //! Weather warning information
+//!
+//! Provides detailed information of weather warning(s) in force.
 
 use chrono::{DateTime, FixedOffset};
 use serde::Deserialize;
@@ -9,7 +11,7 @@ use serde::Deserialize;
 use super::{WarningStatementCode, WarningSubtypeCode};
 use crate::{common::Message, fetch::impl_api};
 
-/// The details of weather warning information.
+/// Detailed information of weather warning(s) in force.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Deserialize)]
 pub struct InfoDetail {

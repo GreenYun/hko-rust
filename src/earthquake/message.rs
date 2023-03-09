@@ -2,15 +2,17 @@
 // SPDX-License-Identifier: MIT
 
 //! Quick Earthquake Messages
+//!
+//! Provides information on earthquakes of magnitude 6.0 or above worldwide, as
+//! analyzed by the Hong Kong Observatory.
 
 use chrono::{DateTime, FixedOffset};
 use serde::Deserialize;
 
 use crate::fetch::impl_api;
 
-/// Quick Earthquake Messages
-///
-/// The message of one last earthquake occured all over the world..
+/// Information on earthquakes of magnitude 6.0 or above worldwide, as analyzed
+/// by the Hong Kong Observatory.
 #[derive(Clone, Debug, Deserialize)]
 pub struct Message {
     #[serde(rename = "lat")]

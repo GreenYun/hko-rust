@@ -27,6 +27,9 @@ mod fetch;
 mod internal;
 #[macro_use]
 mod r#macro;
+#[cfg(feature = "lunardate")]
+#[doc(cfg(feature = "lunardate"))]
+pub mod lunardate;
 #[cfg(feature = "opendata")]
 #[doc(cfg(feature = "opendata"))]
 pub mod opendata;

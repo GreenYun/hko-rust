@@ -1,6 +1,6 @@
 // Copyright (c) 2022 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
-//! Daily Maximum Temperature
+//! //! Provides data on daily maximum temperatures.
 
 impl_clm!(CLMMAXT);

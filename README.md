@@ -2,15 +2,17 @@ hko
 ===
 
 [![Crate](https://img.shields.io/crates/v/hko.svg)](https://crates.io/crates/hko)
-[![API](https://img.shields.io/badge/API-1.7-blue.svg)](https://www.hko.gov.hk/en/abouthko/opendata_intro.htm)
+[![API](https://img.shields.io/badge/API-1.8-blue.svg)](https://www.hko.gov.hk/en/abouthko/opendata_intro.htm)
 [![Docs](https://docs.rs/hko/badge.svg)](https://docs.rs/hko)
 
 A Rust library for Hong Kong Observatory Open Data API.
 
-## Status
+Status
+------
 
-Hong Kong Observatory Open Data API version 1.7 full coverage.
+Hong Kong Observatory Open Data API version 1.8 full coverage.
 
-## Licence
+Licence
+-------
 
 MIT

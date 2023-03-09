@@ -1,7 +1,7 @@
 // Copyright (c) 2021 - 2022 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
-//! Hourly height of astronomical tides.
+//! Provides predicted tidal information. (Hourly heights of astronomical tides)
 
 use std::str::FromStr;
 
@@ -61,10 +61,7 @@ impl FromStr for Response {
                                 Some(ResponseUnit {
                                     month,
                                     day,
-                                    hour: hours
-                                        .get(i)
-                                        .copied()
-                                        .unwrap_or(i.try_into().unwrap_or(0) + 1),
+                                    hour: hours.get(i).copied().unwrap_or(i.try_into().unwrap_or(0) + 1),
                                     height,
                                 })
                             })
@@ -86,20 +83,12 @@ impl FromStr for Response {
                 .chars()
                 .any(|c| !c.is_ascii_digit() && !c.is_whitespace() && !matches!(c, ',' | '.'));
 
-            let mut rdr = csv::ReaderBuilder::new()
-                .has_headers(has_header)
-                .from_reader(raw);
+            let mut rdr = csv::ReaderBuilder::new().has_headers(has_header).from_reader(raw);
 
             let hours = if has_header {
-                let header = rdr
-                    .headers()
-                    .map_err(|e| DataError::SourceFormat(e.to_string()))?;
+                let header = rdr.headers().map_err(|e| DataError::SourceFormat(e.to_string()))?;
 
-                header
-                    .into_iter()
-                    .skip(2)
-                    .filter_map(|x| x.parse().ok())
-                    .collect()
+                header.into_iter().skip(2).filter_map(|x| x.parse().ok()).collect()
             } else {
                 Vec::new()
             };
@@ -119,10 +108,7 @@ impl FromStr for Response {
                                 month,
                                 day,
                                 hour: if has_header {
-                                    hours
-                                        .get(h)
-                                        .copied()
-                                        .unwrap_or(h.try_into().unwrap_or(0) + 1)
+                                    hours.get(h).copied().unwrap_or(h.try_into().unwrap_or(0) + 1)
                                 } else {
                                     h.try_into().unwrap_or(0) + 1
                                 },
@@ -141,7 +127,8 @@ impl FromStr for Response {
 ///
 /// # Errors
 ///
-/// Returns [`APIRequestError`] if specified date is not illegal or out of historical range.
+/// Returns [`APIRequestError`] if specified date is not illegal or out of
+/// historical range.
 pub fn url(
     station: &SeaStation,
     year: i32,
@@ -163,7 +150,7 @@ pub fn url(
             return Err(APIRequestError("month must be 1-12".to_owned()));
         }
 
-        let _ = write!(s, "&month={}", month);
+        let _: Result<_, _> = write!(s, "&month={month}");
     }
 
     if let Some(day) = day {
@@ -173,7 +160,7 @@ pub fn url(
             ));
         }
 
-        let _ = write!(s, "&day={}", day);
+        let _: Result<_, _> = write!(s, "&day={day}");
     }
 
     if let Some(hour) = hour {
@@ -183,16 +170,14 @@ pub fn url(
             ));
         }
 
-        let _ = write!(s, "&hour={}", hour);
+        let _: Result<_, _> = write!(s, "&hour={hour}");
     }
 
     Ok(format!(
         concat_url!(HHOT, "&station={}&year={}{}{}"),
         station,
         year,
-        response_format
-            .map(|f| format!("&rformat={}", f))
-            .unwrap_or_default(),
+        response_format.map(|f| format!("&rformat={f}")).unwrap_or_default(),
         s,
     ))
 }

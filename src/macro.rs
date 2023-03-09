@@ -5,10 +5,7 @@
 #[macro_export]
 macro_rules! icon_uri {
     ($i:expr) => {
-        format!(
-            "https://www.hko.gov.hk/images/HKOWxIconOutline/pic{:?}.png",
-            $i
-        )
+        format!("https://www.hko.gov.hk/images/HKOWxIconOutline/pic{:?}.png", $i)
     };
 }
 
@@ -16,26 +13,24 @@ macro_rules! icon_uri {
 #[macro_export]
 macro_rules! psr_icon_uri {
     ($psr:expr) => {
-        format!(
-            "https://www.hko.gov.hk/common/images/PSR{:?}_50_light.png",
-            $psr
-        )
+        format!("https://www.hko.gov.hk/common/images/PSR{:?}_50_light.png", $psr)
     };
 }
 
 macro_rules! impl_display_traits_internal {
     ($t:ty; $($tr:ident, $lang:ident, $f:ident, $s:ident, $($doc_lang:ident)+);+ $(;)?) => {
         $(
-            #[doc = concat!("Formats the ", stringify!($($doc_lang)+), ".")]
-            ///
-            /// See [formatting rules](impl_display_traits).
-            ///
-            /// ## Example
-            ///
-            /// ```
-            #[doc = concat!("let ", stringify!($s), r#" = format!("{:"#, stringify!($f), r#"}", val);"#)]
-            /// ```
             impl ::std::fmt::$tr for $t {
+                #[doc = concat!("Formats the ", stringify!($($doc_lang)+), ".")]
+                ///
+                /// See [formatting rules](impl_display_traits).
+                ///
+                /// ## Examples
+                ///
+                /// ```
+                #[doc = concat!("let ", stringify!($s), r#" = format!("{val:"#, stringify!($f), r#"}");"#)]
+                /// ```
+                #[allow(clippy::missing_errors_doc)]
                 fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
                     use crate::common::{EnumNameDesc, Lang};
 
@@ -51,8 +46,8 @@ macro_rules! impl_display_traits_internal {
 
 /// Implements formatters for multi-language outputs.
 ///
-/// `$t` must be a type that implements [`EnumNameDesc`](crate::common::EnumNameDesc)
-/// trait.
+/// `$t` must be a type that implements
+/// [`EnumNameDesc`](crate::common::EnumNameDesc) trait.
 ///
 /// Several formatter [types](std::fmt#formatting-traits) are redefined for
 /// multi-language outputs:

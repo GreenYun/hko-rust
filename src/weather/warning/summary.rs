@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MIT
 
 //! Weather warning summary.
+//!
+//! Provides a summary of the weather warning(s) in force in Hong Kong.
 
 use std::collections::HashMap;
 
@@ -35,7 +37,8 @@ pub struct SummaryItem {
     /// Warning code
     ///
     /// When the warning statement code meets one of `WFIRE`, `WRAIN`, and,
-    /// `WTCSGNL`, `code` will be a [`WarningSubtypeCode`](super::WarningSubtypeCode).
+    /// `WTCSGNL`, `code` will be a
+    /// [`WarningSubtypeCode`](super::WarningSubtypeCode).
     pub code: Code,
 
     /// Action code
@@ -48,11 +51,11 @@ pub struct SummaryItem {
     pub update_time: DateTime<FixedOffset>,
 }
 
-/// Weather warning summary.
+/// A summary of the weather warning(s) in force in Hong Kong.
 ///
-/// Each field in `fields` contains one `SummaryItem` and the key of that is
-/// the warning statement code in [`String`] type, which can be converted into
-/// [`WarningStatementCode`](super::WarningStatementCode).
+/// Note: Each field in `fields` contains one `SummaryItem` and the key of that
+/// is the warning statement code in [`String`] type, which can be converted
+/// into [`WarningStatementCode`](super::WarningStatementCode).
 #[derive(Clone, Debug, Deserialize)]
 pub struct Summary {
     #[serde(flatten)]

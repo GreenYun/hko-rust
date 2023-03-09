@@ -2,13 +2,15 @@
 // SPDX-License-Identifier: MIT
 
 //! Local weather forecast.
+//!
+//! Provides local weather forecast for today and/or tomorrow.
 
 use chrono::{DateTime, FixedOffset};
 use serde::Deserialize;
 
 use crate::fetch::impl_api;
 
-/// Local weather forecast.
+/// Local weather forecast for today and/or tomorrow.
 #[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Local {

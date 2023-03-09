@@ -10,12 +10,12 @@ pub trait EnumNameDesc: Debug {
     /// Gets the name of the item.
     #[allow(unused_variables)]
     fn name(&self, lang: Lang) -> String {
-        format!("{:?}", self)
+        format!("{self:?}")
     }
 
     /// Gets the description of the item.
     #[allow(unused_variables)]
     fn desc(&self, lang: Lang) -> String {
-        format!("{:?}", self)
+        format!("{self:?}")
     }
 }

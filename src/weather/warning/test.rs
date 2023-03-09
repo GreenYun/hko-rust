@@ -52,14 +52,14 @@ async fn info_test() {
     };
 
     let warning: Info = serde_json::from_str(test_input).unwrap();
-    println!("{:?}", warning);
+    println!("{warning:?}");
 
     #[cfg(feature = "fetch")]
     {
         use crate::{common::Lang, fetch::fetch};
 
         let warning: Info = fetch(Lang::TC).await.unwrap();
-        println!("{:?}", warning);
+        println!("{warning:?}");
     }
 }
 
@@ -104,13 +104,13 @@ async fn summary_test() {
     };
 
     let summary: Summary = serde_json::from_str(test_input).unwrap();
-    println!("{:?}", summary);
+    println!("{summary:?}");
 
     #[cfg(feature = "fetch")]
     {
         use crate::{common::Lang, fetch::fetch};
 
         let summary: Summary = fetch(Lang::EN).await.unwrap();
-        println!("{:?}", summary);
+        println!("{summary:?}");
     }
 }

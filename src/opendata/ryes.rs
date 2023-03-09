@@ -1,7 +1,7 @@
 // Copyright (c) 2022 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
-//! Weather and radiation level report.
+//! Provides weather and radiation level report.
 
 use std::{collections::HashMap, str::FromStr};
 
@@ -149,9 +149,8 @@ impl FromStr for Response {
             .single()
             .ok_or_else(|| DataError::SourceFormat("Invalid time".to_owned()))?;
 
-        let bulletin_date_time =
-            NaiveDateTime::parse_from_str(&(bulletin_date + &bulletin_time), "%Y%m%d%H%M")
-                .map_err(|e| DataError::SourceFormat(e.to_string()))?;
+        let bulletin_date_time = NaiveDateTime::parse_from_str(&(bulletin_date + &bulletin_time), "%Y%m%d%H%M")
+            .map_err(|e| DataError::SourceFormat(e.to_string()))?;
         let bulletin_date_time = FixedOffset::east(8 * 60 * 60)
             .from_local_datetime(&bulletin_date_time)
             .single()
@@ -226,10 +225,8 @@ pub fn url(date: Date<FixedOffset>, lang: Option<Lang>, station: Option<WeatherS
     format!(
         concat_url!(RYES, "&date={}{}{}"),
         date.format("%Y%m%d"),
-        lang.map(|l| format!("&lang={}", l)).unwrap_or_default(),
-        station
-            .map(|s| format!("&station={}", s))
-            .unwrap_or_default()
+        lang.map(|l| format!("&lang={l}")).unwrap_or_default(),
+        station.map(|s| format!("&station={s}")).unwrap_or_default()
     )
 }
 
@@ -242,7 +239,5 @@ pub async fn fetch(
 ) -> anyhow::Result<Response> {
     use reqwest::get;
 
-    Ok(Response::from_str(
-        &get(url(date, lang, station)).await?.text().await?,
-    )?)
+    Ok(Response::from_str(&get(url(date, lang, station)).await?.text().await?)?)
 }

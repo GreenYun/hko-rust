@@ -1,7 +1,8 @@
 // Copyright (c) 2021 - 2022 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
-//! Latest 10-minute mean visibility.
+//! Provides regional weather in Hong Kong - latest 10-minute mean visibility.
+//! (the data provided is provisional)
 
 use std::str::FromStr;
 
@@ -38,15 +39,12 @@ impl FromStr for Response {
                 data: Vec<Vec<String>>,
             }
 
-            let JsonResponse { data } =
-                serde_json::from_str(s).map_err(|e| DataError::SourceFormat(e.to_string()))?;
+            let JsonResponse { data } = serde_json::from_str(s).map_err(|e| DataError::SourceFormat(e.to_string()))?;
 
             data.into_iter()
                 .filter_map(|v| {
                     let time = NaiveDateTime::parse_from_str(v.get(0)?, "%Y%m%d%H%M").ok()?;
-                    let time = FixedOffset::east(8 * 60 * 60)
-                        .from_local_datetime(&time)
-                        .single()?;
+                    let time = FixedOffset::east(8 * 60 * 60).from_local_datetime(&time).single()?;
 
                     let station = v.get(1)?.to_string();
 
@@ -55,8 +53,7 @@ impl FromStr for Response {
                     let visibility = {
                         use nom::{error, number::complete};
 
-                        let (unit, value) =
-                            complete::float::<_, error::Error<_>>(visibility.as_str()).ok()?;
+                        let (unit, value) = complete::float::<_, error::Error<_>>(visibility.as_str()).ok()?;
 
                         ValUnit {
                             value,
@@ -80,9 +77,7 @@ impl FromStr for Response {
                 visibility: String,
             }
 
-            let mut rdr = csv::ReaderBuilder::new()
-                .has_headers(false)
-                .from_reader(s.as_bytes());
+            let mut rdr = csv::ReaderBuilder::new().has_headers(false).from_reader(s.as_bytes());
 
             rdr.records()
                 .filter_map(|r| {
@@ -93,15 +88,12 @@ impl FromStr for Response {
                     } = r.ok()?.deserialize(None).ok()?;
 
                     let time = NaiveDateTime::parse_from_str(time.as_str(), "%Y%m%d%H%M").ok()?;
-                    let time = FixedOffset::east(8 * 60 * 60)
-                        .from_local_datetime(&time)
-                        .single()?;
+                    let time = FixedOffset::east(8 * 60 * 60).from_local_datetime(&time).single()?;
 
                     let visibility = {
                         use nom::{error, number::complete};
 
-                        let (unit, value) =
-                            complete::float::<_, error::Error<_>>(visibility.as_str()).ok()?;
+                        let (unit, value) = complete::float::<_, error::Error<_>>(visibility.as_str()).ok()?;
 
                         ValUnit {
                             value,
@@ -125,18 +117,13 @@ pub fn url(lang: &Lang, response_format: Option<ResponseFormat>) -> String {
     format!(
         concat_url!(LTMV, "&lang={}{}"),
         lang,
-        response_format
-            .map(|f| format!("&rformat={}", f))
-            .unwrap_or_default(),
+        response_format.map(|f| format!("&rformat={f}")).unwrap_or_default(),
     )
 }
 
 #[cfg(feature = "fetch")]
 #[doc(cfg(feature = "fetch"))]
-pub async fn fetch(
-    lang: Lang,
-    response_format: Option<ResponseFormat>,
-) -> anyhow::Result<Response> {
+pub async fn fetch(lang: Lang, response_format: Option<ResponseFormat>) -> anyhow::Result<Response> {
     use reqwest::get;
 
     Ok(Response::from_str(
