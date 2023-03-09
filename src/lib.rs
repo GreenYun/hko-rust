@@ -20,17 +20,22 @@
 pub use self::fetch::fetch;
 pub use self::fetch::API;
 
-pub mod common;
-pub mod earthquake;
-pub mod error;
-mod fetch;
-mod internal;
 #[macro_use]
 mod r#macro;
+mod fetch;
+mod internal;
+
+pub mod common;
+pub mod error;
+
+pub mod earthquake;
+
+pub mod weather;
+
 #[cfg(feature = "lunardate")]
 #[doc(cfg(feature = "lunardate"))]
 pub mod lunardate;
+
 #[cfg(feature = "opendata")]
 #[doc(cfg(feature = "opendata"))]
 pub mod opendata;
-pub mod weather;

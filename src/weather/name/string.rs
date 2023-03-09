@@ -81,9 +81,7 @@ impl EnumNameDesc for Name {
             }
             .to_owned(),
             Self::Fine5 => match lang {
-                Lang::EN => {
-                    "Mainly Cloudy ( use only in night-time during 25th to 30th of Lunar Month )"
-                }
+                Lang::EN => "Mainly Cloudy ( use only in night-time during 25th to 30th of Lunar Month )",
                 Lang::TC => "天色良好(只在農曆第二十五日至第三十日晚間使用)",
                 Lang::SC => "天色良好(只在农曆第二十五日至第三十日晚间使用)",
             }

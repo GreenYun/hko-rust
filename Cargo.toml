@@ -32,4 +32,4 @@ strum_macros = ">=0.22"
 tokio = {version = "^1.12", features = ["macros", "rt"], optional = true}
 
 [package.metadata.docs.rs]
-features = ["fetch", "opendata"]
+features = ["fetch", "lunardate", "opendata"]

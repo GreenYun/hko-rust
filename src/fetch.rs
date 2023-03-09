@@ -40,7 +40,5 @@ where
 {
     use reqwest::get;
 
-    Ok(serde_json::from_str(
-        &get(T::url(lang)).await?.text().await?,
-    )?)
+    Ok(serde_json::from_str(&get(T::url(lang)).await?.text().await?)?)
 }
