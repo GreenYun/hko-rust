@@ -1,4 +1,4 @@
-// Copyright (c) 2021 - 2022 GreenYun Organization
+// Copyright (c) 2021 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 //! Provides cloud-to-ground and cloud-to-cloud lightning count over Hong Kong
@@ -12,6 +12,7 @@ use serde::Deserialize;
 use crate::{
     common::Lang,
     error::DataError,
+    internal::hkt,
     opendata::{concat_url, ResponseFormat},
 };
 
@@ -47,12 +48,10 @@ impl FromStr for Response {
                 .filter_map(|v| {
                     let time = v.get(0)?.split('-').collect::<Vec<_>>();
                     let start_time = NaiveDateTime::parse_from_str(time.first()?, "%Y%m%d%H%M").ok()?;
-                    let start_time = FixedOffset::east(8 * 60 * 60)
-                        .from_local_datetime(&start_time)
-                        .single()?;
+                    let start_time = hkt().from_local_datetime(&start_time).single()?;
 
                     let end_time = NaiveDateTime::parse_from_str(time.get(1)?, "%Y%m%d%H%M").ok()?;
-                    let end_time = FixedOffset::east(8 * 60 * 60).from_local_datetime(&end_time).single()?;
+                    let end_time = hkt().from_local_datetime(&end_time).single()?;
 
                     let r#type = v.get(1)?.clone();
                     let region = v.get(2)?.clone();
@@ -91,12 +90,10 @@ impl FromStr for Response {
                     let time = time.split('-').collect::<Vec<_>>();
 
                     let start_time = NaiveDateTime::parse_from_str(time.first()?, "%Y%m%d%H%M").ok()?;
-                    let start_time = FixedOffset::east(8 * 60 * 60)
-                        .from_local_datetime(&start_time)
-                        .single()?;
+                    let start_time = hkt().from_local_datetime(&start_time).single()?;
 
                     let end_time = NaiveDateTime::parse_from_str(time.get(1)?, "%Y%m%d%H%M").ok()?;
-                    let end_time = FixedOffset::east(8 * 60 * 60).from_local_datetime(&end_time).single()?;
+                    let end_time = hkt().from_local_datetime(&end_time).single()?;
 
                     Some(ResponseUnit {
                         start_time,

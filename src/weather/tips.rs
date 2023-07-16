@@ -1,4 +1,4 @@
-// Copyright (c) 2021 - 2022 GreenYun Organization
+// Copyright (c) 2021 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 //! Special weather tips.
@@ -14,9 +14,13 @@ use crate::fetch::impl_api;
 #[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Tip {
+    /// Content
+    ///
     /// May be missing if the value is null or not available.
     pub desc: Option<String>,
 
+    /// Update time
+    ///
     /// May be missing if the value is null or not available.
     #[serde(default)]
     pub update_time: Option<DateTime<FixedOffset>>,

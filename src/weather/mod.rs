@@ -1,4 +1,4 @@
-// Copyright (c) 2021 - 2022 GreenYun Organization
+// Copyright (c) 2021 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 //! Weather information
@@ -20,20 +20,33 @@
 //!
 //! To generate the API URL, simply call [`Type::url(lang)`](crate::API::url()).
 //!
+//! - **HTTP Request Method**: GET
+//! - **Return Type**: JSON
+//!
 //! ## Example
 //!
 //! Parse the JSON data (already stored in `s` of `&str`) and get the dataset:
-//! ```
+//!
+//! ```no_run
 //! use hko::weather::Local;
 //!
+//! # fn f(s: &str) -> anyhow::Result<Local> {
 //! let l : Local = serde_json::from_str(s)?;
+//! # Ok(l)
+//! # }
 //! ```
 //!
 //! Simply `fetch` and wait for the dataset written in English:
-//! ```
-//! use hko::weather::Current;
 //!
-//! let c : Current = fetch(Lang::en).await?;
+//! ```no_run
+//! # use hko::common::Lang;
+//! use hko::weather::Current;
+//! use hko::fetch;
+//!
+//! # async fn f() -> anyhow::Result<Current> {
+//! let c : Current = fetch(Lang::EN).await?;
+//! # Ok(c)
+//! # }
 //! ```
 
 pub use self::{

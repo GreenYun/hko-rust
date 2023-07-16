@@ -1,6 +1,7 @@
-// Copyright (c) 2021 - 2022 GreenYun Organization
+// Copyright (c) 2021 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
+#![allow(unused_macros)]
 #![feature(doc_cfg)]
 
 //! This is a library for users to access Hong Kong Observatory Open Data API.
@@ -26,11 +27,17 @@ mod fetch;
 mod internal;
 
 pub mod common;
+
+#[doc(hidden)]
 pub mod error;
 
+#[cfg(feature = "earthquake")]
+#[doc(cfg(feature = "earthquake"))]
 pub mod earthquake;
 
-pub mod weather;
+#[cfg(feature = "hourly_rainfall")]
+#[doc(cfg(feature = "hourly_rainfall"))]
+pub mod hourly_rainfall;
 
 #[cfg(feature = "lunardate")]
 #[doc(cfg(feature = "lunardate"))]
@@ -39,3 +46,7 @@ pub mod lunardate;
 #[cfg(feature = "opendata")]
 #[doc(cfg(feature = "opendata"))]
 pub mod opendata;
+
+#[cfg(feature = "weather")]
+#[doc(cfg(feature = "weather"))]
+pub mod weather;

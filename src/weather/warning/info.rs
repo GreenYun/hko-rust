@@ -1,4 +1,4 @@
-// Copyright (c) 2021 - 2022 GreenYun Organization
+// Copyright (c) 2021 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 //! Weather warning information
@@ -17,8 +17,11 @@ use crate::{common::Message, fetch::impl_api};
 pub struct InfoDetail {
     pub contents: Option<Message>,
 
+    /// Warning statement code
     #[serde(rename = "warningStatementCode")]
     pub code: WarningStatementCode,
+
+    /// Warning sub-type code
     pub subtype: Option<WarningSubtypeCode>,
 
     #[serde(rename = "updateTime")]

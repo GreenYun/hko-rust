@@ -1,4 +1,4 @@
-// Copyright (c) 2021 - 2022 GreenYun Organization
+// Copyright (c) 2021 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 /// Generates the URI of specified weather icon, usually an HTTPS link.
@@ -27,7 +27,7 @@ macro_rules! impl_display_traits_internal {
                 ///
                 /// ## Examples
                 ///
-                /// ```
+                /// ```ignore
                 #[doc = concat!("let ", stringify!($s), r#" = format!("{val:"#, stringify!($f), r#"}");"#)]
                 /// ```
                 #[allow(clippy::missing_errors_doc)]

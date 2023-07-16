@@ -2,6 +2,9 @@
 // SPDX-License-Identifier: MIT
 
 //! Gregorian-Lunar calendar conversion table
+//!
+//! - **HTTP Request Method**: GET
+//! - **Return Type**: JSON
 
 use chrono::{Datelike, NaiveDate};
 use serde::Deserialize;
@@ -12,10 +15,10 @@ use crate::error::APIRequestError;
 #[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct Response {
-    /// Lunar year, Gan-Zhi and Zodiac, in traditional Chinese.
+    /// Lunar year, Gan-Zhi and Zodiac (in traditional Chinese)
     pub lunar_year: String,
 
-    /// Lunar date, in traditional Chinese.
+    /// Lunar date (in traditional Chinese)
     pub lunar_date: String,
 }
 
@@ -27,7 +30,7 @@ pub struct Response {
 /// range.
 pub fn url(date: NaiveDate) -> Result<String, APIRequestError> {
     if date.year() != 2023 {
-        return Err(APIRequestError("year must be 2021-2024".into()));
+        return Err(APIRequestError("date must within the year of 2023".into()));
     }
 
     Ok(format!(

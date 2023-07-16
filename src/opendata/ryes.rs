@@ -1,63 +1,63 @@
-// Copyright (c) 2022 GreenYun Organization
+// Copyright (c) 2022 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 //! Provides weather and radiation level report.
 
 use std::{collections::HashMap, str::FromStr};
 
-use chrono::{Date, DateTime, FixedOffset, NaiveDate, NaiveDateTime, TimeZone};
+use chrono::{DateTime, FixedOffset, NaiveDate, NaiveDateTime, TimeZone};
 use serde::Deserialize;
 use serde_json::Value;
 
 use super::WeatherStation;
-use crate::{common::Lang, error::DataError};
+use crate::{common::Lang, error::DataError, internal::hkt};
 
 /// Data retrieved from a station.
 #[derive(Clone, Debug)]
 pub struct AreaData {
-    /// Station name.
+    /// Station name
     pub name: String,
 
-    /// Average ambient gamma radiation dose rate (microsievert per hour).
+    /// Average ambient gamma radiation dose rate (microsievert per hour)
     pub microsieverts: Option<f32>,
 
-    /// Maximum air temperature (degree Celsius).
+    /// Maximum air temperature (degree Celsius)
     pub max_temp: Option<f32>,
 
-    /// Minimum air temperature (degree Celsius).
+    /// Minimum air temperature (degree Celsius)
     pub min_temp: Option<f32>,
 
-    /// Maximum air temperature (degree Celsius).
+    /// Maximum air temperature (degree Celsius)
     pub readings_max_temp: Option<f32>,
 
-    /// Minimum air temperature (degree Celsius).
+    /// Minimum air temperature (degree Celsius)
     pub readings_min_temp: Option<f32>,
 
-    /// Minimum grass temperature (degree Celsius).
+    /// Minimum grass temperature (degree Celsius)
     pub readings_min_grass_temp: Option<f32>,
 
-    /// Maximun relative humidity (percentage).
+    /// Maximun relative humidity (percentage)
     pub readings_max_rh: Option<f32>,
 
-    /// Minimum relative humidity (percentage).
+    /// Minimum relative humidity (percentage)
     pub readings_min_rh: Option<f32>,
 
-    /// Rainfall (millimetre).
+    /// Rainfall (millimetre)
     pub readings_rainfall: Option<f32>,
 
-    /// Average rainfall (millimetre).
+    /// Average rainfall (millimetre)
     pub readings_average_rainfall: Option<f32>,
 
-    /// Accumulated rainfall (millimetre).
+    /// Accumulated rainfall (millimetre)
     pub readings_accumulated_rainfall: Option<f32>,
 
-    /// Maximum UV index.
+    /// Maximum UV index
     pub readings_max_uv_index: Option<f32>,
 
-    /// Mean UV index.
+    /// Mean UV index
     pub readings_mean_uv_index: Option<f32>,
 
-    /// Duration of sunshine (hour).
+    /// Duration of sunshine (hour)
     pub readings_sunshine: Option<f32>,
 }
 
@@ -94,19 +94,19 @@ impl Default for AreaData {
 #[derive(Clone, Debug)]
 pub struct Response {
     /// Description of average ambient gamma radiation dose rate taken outdoors
-    /// in Hong Kong.
+    /// in Hong Kong
     pub hong_kong_desc: String,
 
-    /// Note.
+    /// Notes
     pub note_desc: Vec<String>,
 
-    /// Information Date.
-    pub report_time_info_date: Date<FixedOffset>,
+    /// Information Date
+    pub report_time_info_date: NaiveDate,
 
-    /// Bulletin date and time.
+    /// Bulletin date and time
     pub bulletin_date_time: DateTime<FixedOffset>,
 
-    /// Area data.
+    /// Area data
     pub area_data: Vec<AreaData>,
 }
 
@@ -144,14 +144,10 @@ impl FromStr for Response {
 
         let report_time_info_date = NaiveDate::parse_from_str(&report_time_info_date, "%Y%m%d")
             .map_err(|e| DataError::SourceFormat(e.to_string()))?;
-        let report_time_info_date = FixedOffset::east(8 * 60 * 60)
-            .from_local_date(&report_time_info_date)
-            .single()
-            .ok_or_else(|| DataError::SourceFormat("Invalid time".to_owned()))?;
 
         let bulletin_date_time = NaiveDateTime::parse_from_str(&(bulletin_date + &bulletin_time), "%Y%m%d%H%M")
             .map_err(|e| DataError::SourceFormat(e.to_string()))?;
-        let bulletin_date_time = FixedOffset::east(8 * 60 * 60)
+        let bulletin_date_time = hkt()
             .from_local_datetime(&bulletin_date_time)
             .single()
             .ok_or_else(|| DataError::SourceFormat("Invalid time".to_owned()))?;
@@ -221,7 +217,7 @@ impl FromStr for Response {
 }
 
 #[must_use]
-pub fn url(date: Date<FixedOffset>, lang: Option<Lang>, station: Option<WeatherStation>) -> String {
+pub fn url(date: NaiveDate, lang: Option<Lang>, station: Option<WeatherStation>) -> String {
     format!(
         concat_url!(RYES, "&date={}{}{}"),
         date.format("%Y%m%d"),
@@ -232,11 +228,7 @@ pub fn url(date: Date<FixedOffset>, lang: Option<Lang>, station: Option<WeatherS
 
 #[cfg(feature = "fetch")]
 #[doc(cfg(feature = "fetch"))]
-pub async fn fetch(
-    date: Date<FixedOffset>,
-    lang: Option<Lang>,
-    station: Option<WeatherStation>,
-) -> anyhow::Result<Response> {
+pub async fn fetch(date: NaiveDate, lang: Option<Lang>, station: Option<WeatherStation>) -> anyhow::Result<Response> {
     use reqwest::get;
 
     Ok(Response::from_str(&get(url(date, lang, station)).await?.text().await?)?)

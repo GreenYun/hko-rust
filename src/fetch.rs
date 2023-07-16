@@ -1,4 +1,4 @@
-// Copyright (c) 2021 - 2022 GreenYun Organization
+// Copyright (c) 2021 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 use crate::common::Lang;
@@ -12,10 +12,9 @@ pub trait API {
     #[must_use]
     fn url(lang: Lang) -> String {
         format!(
-            "https://data.weather.gov.hk/weatherAPI/opendata/{}.php?dataType={}&lang={}",
+            "https://data.weather.gov.hk/weatherAPI/opendata/{}.php?dataType={}&lang={lang}",
             Self::BASE,
             Self::DATATYPE,
-            lang
         )
     }
 }
@@ -29,9 +28,15 @@ macro_rules! impl_api {
     };
 }
 
+#[allow(unused_imports)]
 pub(crate) use impl_api;
 
 /// Helper function to fetch data from API.
+///
+/// You may found connection error from [`reqwest`], because this crate has not
+/// import any dependency feature providing TLS/HTTPS connection function.
+/// Add your favorite TLS implementation to your `Cargo.toml` to fix this
+/// problem. See the documentation of [`reqwest`] for more information.
 #[cfg(feature = "fetch")]
 #[doc(cfg(feature = "fetch"))]
 pub async fn fetch<T>(lang: Lang) -> anyhow::Result<T>

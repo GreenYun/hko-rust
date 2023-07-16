@@ -1,4 +1,4 @@
-// Copyright (c) 2021 - 2022 GreenYun Organization
+// Copyright (c) 2021 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 //! Provides regional weather in Hong Kong - latest 10-minute mean visibility.
@@ -12,6 +12,7 @@ use serde::Deserialize;
 use crate::{
     common::{Lang, ValUnit},
     error::DataError,
+    internal::hkt,
     opendata::{concat_url, ResponseFormat},
 };
 
@@ -44,7 +45,7 @@ impl FromStr for Response {
             data.into_iter()
                 .filter_map(|v| {
                     let time = NaiveDateTime::parse_from_str(v.get(0)?, "%Y%m%d%H%M").ok()?;
-                    let time = FixedOffset::east(8 * 60 * 60).from_local_datetime(&time).single()?;
+                    let time = hkt().from_local_datetime(&time).single()?;
 
                     let station = v.get(1)?.to_string();
 
@@ -88,7 +89,7 @@ impl FromStr for Response {
                     } = r.ok()?.deserialize(None).ok()?;
 
                     let time = NaiveDateTime::parse_from_str(time.as_str(), "%Y%m%d%H%M").ok()?;
-                    let time = FixedOffset::east(8 * 60 * 60).from_local_datetime(&time).single()?;
+                    let time = hkt().from_local_datetime(&time).single()?;
 
                     let visibility = {
                         use nom::{error, number::complete};

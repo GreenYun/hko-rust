@@ -1,4 +1,4 @@
-// Copyright (c) 2021 - 2022 GreenYun Organization
+// Copyright (c) 2021 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 //! Local weather forecast.
@@ -14,12 +14,25 @@ use crate::fetch::impl_api;
 #[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Local {
+    /// General situation
     pub general_situation: String,
+
+    /// Tropical cyclone information
     pub tc_info: String,
+
+    /// Fire danger warning message
     pub fire_danger_warning: String,
+
+    /// Forecast period
     pub forecast_period: String,
+
+    /// Forecast description
     pub forecast_desc: String,
+
+    /// Outlook
     pub outlook: String,
+
+    /// Update time
     pub update_time: DateTime<FixedOffset>,
 }
 

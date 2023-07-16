@@ -16,7 +16,7 @@ async fn test() {
     {
         use crate::lunardate::fetch;
 
-        let date = NaiveDate::from_ymd(2023, 1, 1);
+        let date = NaiveDate::from_ymd_opt(2023, 1, 1).unwrap();
         let response: Response = fetch(date).await.unwrap();
         println!("{response:?}");
     }

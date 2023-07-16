@@ -1,4 +1,4 @@
-// Copyright (c) 2021 - 2022 GreenYun Organization
+// Copyright (c) 2021 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 //! Quick Earthquake Messages
@@ -21,7 +21,7 @@ pub struct Message {
     #[serde(rename = "lon")]
     pub longitude: f64,
 
-    // Richter magnitude scale
+    /// Richter magnitude scale
     #[serde(rename = "mag")]
     pub magnitude: f64,
     pub region: String,

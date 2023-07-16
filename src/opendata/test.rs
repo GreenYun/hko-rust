@@ -1,4 +1,4 @@
-// Copyright (c) 2022 GreenYun Organization
+// Copyright (c) 2022 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 #![allow(clippy::nursery)]
@@ -336,21 +336,14 @@ async fn test_ryes() {
 
     #[cfg(feature = "fetch")]
     {
-        use chrono::{Date, FixedOffset, NaiveDate};
+        use chrono::NaiveDate;
 
         use super::ryes::fetch;
 
         std::mem::drop(
-            fetch(
-                Date::from_utc(
-                    NaiveDate::from_ymd(2022, 1, 1),
-                    FixedOffset::east(8 * 60 * 60),
-                ),
-                None,
-                None,
-            )
-            .await
-            .unwrap(),
+            fetch(NaiveDate::from_ymd_opt(2022, 1, 1).unwrap(), None, None)
+                .await
+                .unwrap(),
         );
     }
 }

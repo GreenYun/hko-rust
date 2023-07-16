@@ -1,4 +1,4 @@
-// Copyright (c) 2022 GreenYun Organization
+// Copyright (c) 2022 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 //! Provides data on daily maximum, mean and minimum temperatures.
@@ -177,22 +177,21 @@ macro_rules! impl_clm {
                 if let Some(year) = year {
                     if !check_year(year, station.clone()) {
                         return Err(APIRequestError(format!(
-                            "Year {} is not available for {}",
-                            year, station
+                            "Year {year} is not available for {station}"
                         )));
                     }
 
-                    format!("&year={}", year)
+                    format!("&year={year}")
                 } else {
                     String::new()
                 },
                 if let Some(month) = month {
-                    format!("&month={}", month)
+                    format!("&month={month}")
                 } else {
                     String::new()
                 },
                 response_format
-                    .map(|f| format!("&rformat={}", f))
+                    .map(|f| format!("&rformat={f}"))
                     .unwrap_or(String::new()),
             ))
         }

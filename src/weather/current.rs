@@ -1,4 +1,4 @@
-// Copyright (c) 2021 - 2022 GreenYun Organization
+// Copyright (c) 2021 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 //! Current weather report.
@@ -12,6 +12,44 @@ use crate::{
     common::{Message, PlaceValUnit},
     fetch::impl_api,
 };
+
+/// Current weather report of Hong Kong.
+#[derive(Clone, Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Current {
+    pub lightning: Option<Lightning>,
+    pub rainfall: Rainfall,
+
+    #[serde(flatten)]
+    pub icon: Icon,
+
+    #[serde(rename = "uvindex")]
+    pub uv_index: UVIndexOrEmpty,
+    pub warning_message: Option<Message>,
+    pub rainstorm_reminder: Option<String>,
+
+    /// Special weather tips
+    #[serde(rename = "specialWxTips")]
+    pub special_tips: Option<Message>,
+
+    /// Message of tropical cyclone position
+    pub tcmessage: Option<Message>,
+
+    /// Minimum temperature from midnight to 9 am
+    pub mintemp_from00_to09: String,
+
+    /// Accumulated rainfall at HKO from midnight to noon
+    pub rainfall_from00_to12: String,
+
+    /// Rainfall in last month
+    pub rainfall_last_month: String,
+
+    /// Accumulated rainfall from January to last month
+    pub rainfall_january_to_last_month: String,
+    pub temperature: Temperature,
+    pub humidity: Humidity,
+    pub update_time: DateTime<FixedOffset>,
+}
 
 /// Whether lightning `occur`s in `place`.
 #[derive(Clone, Debug, Deserialize)]
@@ -55,6 +93,25 @@ pub struct Rainfall {
     pub data: Vec<RainfallData>,
     pub start_time: DateTime<FixedOffset>,
     pub end_time: DateTime<FixedOffset>,
+}
+
+/// A List of weather icons.
+///
+/// Each `icon` (as primitive type [`i32`]) can be converted to
+/// [`Name`](crate::weather::Name) for some weather description.
+///
+/// To retrieve icons, use [`icon_uri`] macro to obtain the URI.
+///
+/// Visit
+/// [hko.gov.hk](https://www.hko.gov.hk/textonly/v2/explain/wxicon_e.htm) for
+/// more details.
+#[derive(Clone, Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Icon {
+    pub icon: Vec<i32>,
+
+    #[serde(rename = "iconUpdateTime")]
+    pub update_time: DateTime<FixedOffset>,
 }
 
 /// UV index `value` observed from specified `place`, with additional
@@ -121,63 +178,6 @@ pub struct Temperature {
 pub struct Humidity {
     pub data: Vec<PlaceValUnit>,
     pub record_time: DateTime<FixedOffset>,
-}
-
-/// A List of weather icons.
-///
-/// Each `icon` (as primitive type [`i32`]) can be converted to
-/// [`Name`](crate::weather::Name) for some weather description.
-///
-/// To retrieve icons, use [`icon_uri`] macro to obtain the URI.
-///
-/// Visit
-/// [hko.gov.hk](https://www.hko.gov.hk/textonly/v2/explain/wxicon_e.htm) for
-/// more details.
-#[derive(Clone, Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Icon {
-    pub icon: Vec<i32>,
-
-    #[serde(rename = "iconUpdateTime")]
-    pub update_time: DateTime<FixedOffset>,
-}
-
-/// Current weather report of Hong Kong.
-#[derive(Clone, Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Current {
-    pub lightning: Option<Lightning>,
-    pub rainfall: Rainfall,
-
-    #[serde(flatten)]
-    pub icon: Icon,
-
-    #[serde(rename = "uvindex")]
-    pub uv_index: UVIndexOrEmpty,
-    pub warning_message: Option<Message>,
-    pub rainstorm_reminder: Option<String>,
-
-    /// Special weather tips
-    #[serde(rename = "specialWxTips")]
-    pub special_tips: Option<Message>,
-
-    /// Message of tropical cyclone position
-    pub tcmessage: Option<Message>,
-
-    /// Minimum temperature from midnight to 9 am
-    pub mintemp_from00_to09: String,
-
-    /// Accumulated rainfall at HKO from midnight to noon
-    pub rainfall_from00_to12: String,
-
-    /// Rainfall in last month
-    pub rainfall_last_month: String,
-
-    /// Accumulated rainfall from January to last month
-    pub rainfall_january_to_last_month: String,
-    pub temperature: Temperature,
-    pub humidity: Humidity,
-    pub update_time: DateTime<FixedOffset>,
 }
 
 impl_api!(Current, weather, rhrread);

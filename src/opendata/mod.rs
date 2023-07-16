@@ -1,4 +1,4 @@
-// Copyright (c) 2021 - 2022 GreenYun Organization
+// Copyright (c) 2021 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 //! Open Data (Climate and Weather Information)
@@ -24,6 +24,9 @@
 //!
 //! Public funtions `url` and `fetch` are provided in each module to fetch data
 //! with the API.
+//!
+//! - **HTTP Request Method**: GET
+//! - **Return Type**: JSON or CSV (except `ryes`)
 
 macro_rules! concat_url {
     ($datatype:ident, $tail:literal) => {
@@ -36,7 +39,7 @@ macro_rules! concat_url {
 }
 
 use concat_url;
-use strum_macros::Display;
+use strum::Display;
 
 pub use self::{clm::*, rs::*, station::*};
 

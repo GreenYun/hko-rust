@@ -4,32 +4,37 @@ description = "Rust library for Hong Kong Observatory Open Data API"
 documentation = "https://docs.rs/hko"
 edition = "2021"
 include = ["src/**/*.rs", "!**/test.rs", "README.md", "LICENSE"]
-keywords = ["weather", "hong-kong", "observatory"]
+keywords = ["weather", "hong-kong", "observatory", "opendata"]
 license = "MIT"
 name = "hko"
 readme = "README.md"
 repository = "https://github.com/GreenYun/hko-rust"
-version = "1.8.1"
+version = "1.9.0"
 
 [features]
-fetch = ["anyhow", "reqwest", "serde_json"]
+earthquake = []
+fetch = ["anyhow", "reqwest/json", "serde_json"]
+hourly_rainfall = []
 lunardate = []
 opendata = ["csv", "nom", "serde_json"]
-test = ["tokio", "serde_json"]
+test = ["serde_json"]
+weather = ["num-derive", "num-traits"]
 
 [dependencies]
-anyhow = {version = "^1.0.44", optional = true}
-chrono = {version = "^0.4", features = ["serde"]}
-csv = {version = "^1.1", optional = true}
-nom = {version = "^7", optional = true}
-num-derive = "0.3"
-num-traits = "0.2"
-reqwest = {version = ">=0.11", features = ["json"], optional = true}
-serde = {version = "^1.0.130", features = ["derive"]}
-serde_json = {version = "^1.0.68", optional = true}
-strum = ">=0.22"
-strum_macros = ">=0.22"
-tokio = {version = "^1.12", features = ["macros", "rt"], optional = true}
+anyhow = {version = "1", optional = true}
+chrono = {version = "0.4", features = ["serde"]}
+csv = {version = "1", optional = true}
+nom = {version = "7", optional = true}
+num-derive = {version = "0.4", optional = true}
+num-traits = {version = "0.2", optional = true}
+reqwest = {version = "0.11", optional = true, default-features = false}
+serde = {version = "1", features = ["derive"]}
+serde_json = {version = "1", optional = true}
+strum = {version = ">=0.22", features = ["derive"]}
+
+[dev-dependencies]
+reqwest = {version = "0.11", features = ["native-tls", "json"]}
+tokio = {version = "1", features = ["macros", "rt"], default-features = false}
 
 [package.metadata.docs.rs]
-features = ["fetch", "lunardate", "opendata"]
+features = ["earthquake", "fetch", "hourly_rainfall", "lunardate", "opendata", "weather"]

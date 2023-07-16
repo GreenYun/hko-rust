@@ -1,44 +1,9 @@
-// Copyright (c) 2021 - 2022 GreenYun Organization
+// Copyright (c) 2021 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 use std::{marker::PhantomData, ptr::NonNull, vec};
 
 use serde::Deserialize;
-
-/// An iterator over the elements of a `Message`.
-///
-/// This struct is created by the [`iter`](Message::iter) method on [`Message`].
-pub struct Iter<'a> {
-    ptr: NonNull<String>,
-    end: *const String,
-    _marker: PhantomData<&'a String>,
-}
-
-impl<'a> Iter<'a> {
-    #[inline]
-    fn post_inc_start(&mut self) -> *const String {
-        let old = self.ptr.as_ptr();
-
-        self.ptr = unsafe { NonNull::new_unchecked(self.ptr.as_ptr().add(1)) };
-
-        old
-    }
-}
-
-impl<'a> Iterator for Iter<'a> {
-    type Item = &'a String;
-
-    #[inline]
-    fn next(&mut self) -> Option<Self::Item> {
-        unsafe {
-            if self.ptr.as_ptr() as *const String == self.end {
-                None
-            } else {
-                Some(&*self.post_inc_start())
-            }
-        }
-    }
-}
 
 /// One or more slice of messages.
 ///
@@ -66,7 +31,8 @@ impl Message {
 
     /// Converts from `Message` to [`Option`]`<`[`String`]`>`.
     ///
-    /// Converts `self` into an [`Option`]`<`[`String`]`>`, consuming `self`, and discarding the list, if any.
+    /// Converts `self` into an [`Option`]`<`[`String`]`>`, consuming `self`,
+    /// and discarding the list, if any.
     #[must_use]
     #[allow(clippy::missing_const_for_fn)]
     pub fn string(self) -> Option<String> {
@@ -79,7 +45,8 @@ impl Message {
 
     /// Converts from `Message` to [`Option`]`<`[`Vec`]`<`[`String`]`>>`.
     ///
-    /// Converts `self` into an [`Option`]`<`[`Vec`]`<`[`String`]`>>`, consuming `self`, and discarding the string, if any.
+    /// Converts `self` into an [`Option`]`<`[`Vec`]`<`[`String`]`>>`, consuming
+    /// `self`, and discarding the string, if any.
     #[must_use]
     #[allow(clippy::missing_const_for_fn)]
     pub fn list(self) -> Option<Vec<String>> {
@@ -100,7 +67,7 @@ impl Message {
 
         unsafe {
             Iter {
-                ptr: NonNull::new_unchecked(ptr as *mut String),
+                ptr: NonNull::new_unchecked(ptr.cast_mut()),
                 end: ptr.add(len),
                 _marker: PhantomData,
             }
@@ -109,9 +76,8 @@ impl Message {
 }
 
 impl IntoIterator for Message {
-    type Item = String;
-
     type IntoIter = std::vec::IntoIter<Self::Item>;
+    type Item = String;
 
     fn into_iter(self) -> Self::IntoIter {
         match self {
@@ -123,11 +89,45 @@ impl IntoIterator for Message {
 }
 
 impl<'a> IntoIterator for &'a Message {
-    type Item = &'a String;
-
     type IntoIter = Iter<'a>;
+    type Item = &'a String;
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter()
+    }
+}
+
+/// An iterator over the elements of a `Message`.
+///
+/// This struct is created by the [`iter`](Message::iter) method on [`Message`].
+pub struct Iter<'a> {
+    ptr: NonNull<String>,
+    end: *const String,
+    _marker: PhantomData<&'a String>,
+}
+
+impl<'a> Iter<'a> {
+    #[inline]
+    fn post_inc_start(&mut self) -> *const String {
+        let old = self.ptr.as_ptr();
+
+        self.ptr = unsafe { NonNull::new_unchecked(self.ptr.as_ptr().add(1)) };
+
+        old
+    }
+}
+
+impl<'a> Iterator for Iter<'a> {
+    type Item = &'a String;
+
+    #[inline]
+    fn next(&mut self) -> Option<Self::Item> {
+        unsafe {
+            if self.ptr.as_ptr().cast_const() == self.end {
+                None
+            } else {
+                Some(&*self.post_inc_start())
+            }
+        }
     }
 }

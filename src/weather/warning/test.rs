@@ -1,4 +1,4 @@
-// Copyright (c) 2021 - 2022 GreenYun Organization
+// Copyright (c) 2021 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 #[tokio::test]
@@ -58,7 +58,7 @@ async fn info_test() {
     {
         use crate::{common::Lang, fetch::fetch};
 
-        let warning: Info = fetch(Lang::TC).await.unwrap();
+        let warning: Info = fetch(Lang::EN).await.unwrap();
         println!("{warning:?}");
     }
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2021 - 2022 GreenYun Organization
+// Copyright (c) 2021 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 //! Earthquake information
@@ -16,20 +16,33 @@
 //!
 //! To generate the API URL, simply call [`url(lang)`](crate::API::url()).
 //!
+//! - **HTTP Request Method**: GET
+//! - **Return Type**: JSON
+//!
 //! ## Example
 //!
 //! Parse the JSON data (already stored in `s` of `&str`) and get the dataset:
+//!
 //! ```
 //! use hko::earthquake::FeltReport;
 //!
-//! let l : FeltReport = serde_json::from_str(s)?;
+//! # fn f(s: &str) -> anyhow::Result<FeltReport> {
+//! let r : FeltReport = serde_json::from_str(s)?;
+//! # Ok(r)
+//! # }
 //! ```
 //!
 //! Simply `fetch` and wait for the dataset written in English:
-//! ```
-//! use hko::earthquake::Message;
 //!
-//! let c : Message = fetch(Lang::en).await?;
+//! ```
+//! use hko::common::Lang;
+//! use hko::earthquake::Message;
+//! use hko::fetch;
+//!
+//! # async fn f() -> anyhow::Result<Message> {
+//! let m : Message = fetch(Lang::EN).await?;
+//! # Ok(m)
+//! # }
 //! ```
 
 pub use self::{felt_report::FeltReport, message::Message};
