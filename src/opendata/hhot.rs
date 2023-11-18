@@ -48,7 +48,7 @@ impl FromStr for Response {
 
             data.into_iter()
                 .filter_map(|v| {
-                    let month = v.get(0)?.parse().ok()?;
+                    let month = v.first()?.parse().ok()?;
                     let day = v.get(1)?.parse().ok()?;
 
                     Some(
@@ -182,6 +182,7 @@ pub fn url(
     ))
 }
 
+#[allow(clippy::missing_errors_doc)]
 #[cfg(feature = "fetch")]
 #[doc(cfg(feature = "fetch"))]
 pub async fn fetch(

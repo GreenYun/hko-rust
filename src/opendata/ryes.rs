@@ -226,6 +226,7 @@ pub fn url(date: NaiveDate, lang: Option<Lang>, station: Option<WeatherStation>)
     )
 }
 
+#[allow(clippy::missing_errors_doc)]
 #[cfg(feature = "fetch")]
 #[doc(cfg(feature = "fetch"))]
 pub async fn fetch(date: NaiveDate, lang: Option<Lang>, station: Option<WeatherStation>) -> anyhow::Result<Response> {

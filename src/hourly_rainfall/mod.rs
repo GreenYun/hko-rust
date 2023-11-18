@@ -72,6 +72,7 @@ pub fn url(lang: &Lang) -> String {
     format!("https://data.weather.gov.hk/weatherAPI/opendata/hourlyRainfall.php?lang={lang}")
 }
 
+#[allow(clippy::missing_errors_doc)]
 #[cfg(feature = "fetch")]
 #[doc(cfg(feature = "fetch"))]
 pub async fn fetch(lang: &Lang) -> anyhow::Result<Response> {

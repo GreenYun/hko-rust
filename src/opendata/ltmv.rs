@@ -44,7 +44,7 @@ impl FromStr for Response {
 
             data.into_iter()
                 .filter_map(|v| {
-                    let time = NaiveDateTime::parse_from_str(v.get(0)?, "%Y%m%d%H%M").ok()?;
+                    let time = NaiveDateTime::parse_from_str(v.first()?, "%Y%m%d%H%M").ok()?;
                     let time = hkt().from_local_datetime(&time).single()?;
 
                     let station = v.get(1)?.to_string();
@@ -122,6 +122,7 @@ pub fn url(lang: &Lang, response_format: Option<ResponseFormat>) -> String {
     )
 }
 
+#[allow(clippy::missing_errors_doc)]
 #[cfg(feature = "fetch")]
 #[doc(cfg(feature = "fetch"))]
 pub async fn fetch(lang: Lang, response_format: Option<ResponseFormat>) -> anyhow::Result<Response> {

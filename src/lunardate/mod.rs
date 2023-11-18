@@ -29,8 +29,8 @@ pub struct Response {
 /// Returns [`APIRequestError`] if specified date is not illegal or out of
 /// range.
 pub fn url(date: NaiveDate) -> Result<String, APIRequestError> {
-    if date.year() != 2023 {
-        return Err(APIRequestError("date must within the year of 2023".into()));
+    if !matches!(date.year(), 2023 | 2024) {
+        return Err(APIRequestError("date must be between 2023-01-01 and 2024-12-31".into()));
     }
 
     Ok(format!(
@@ -39,12 +39,13 @@ pub fn url(date: NaiveDate) -> Result<String, APIRequestError> {
     ))
 }
 
+#[allow(clippy::missing_errors_doc)]
 #[cfg(feature = "fetch")]
 #[doc(cfg(feature = "fetch"))]
 pub async fn fetch(date: NaiveDate) -> anyhow::Result<Response> {
     use reqwest::get;
 
-    Ok(serde_json::from_str(&get(url(date).unwrap()).await?.text().await?)?)
+    Ok(serde_json::from_str(&get(url(date)?).await?.text().await?)?)
 }
 
 #[cfg(feature = "test")]

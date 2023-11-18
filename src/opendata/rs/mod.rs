@@ -160,6 +160,7 @@ macro_rules! impl_rs {
             ))
         }
 
+        #[allow(clippy::missing_errors_doc)]
         #[cfg(feature = "fetch")]
         #[doc(cfg(feature = "fetch"))]
         pub async fn fetch(
@@ -185,16 +186,16 @@ macro_rules! impl_rs {
             #[tokio::test]
             async fn test() {
                 let Response(r1) = response_from_str!(
-                    r#"YYYY-MM-DD,RISE,TRAN.,SET
+                    r"YYYY-MM-DD,RISE,TRAN.,SET
 2022-01-01,07:03,12:27,17:51
 2022-01-02,07:03,12:27,17:51
-2022-01-03,07:03,12:28,17:52"#,
+2022-01-03,07:03,12:28,17:52",
                 );
 
                 let Response(r2) = response_from_str!(
-                    r#"2022-01-01,07:03,12:27,17:51
+                    r"2022-01-01,07:03,12:27,17:51
 2022-01-02,07:03,12:27,17:51
-2022-01-03,07:03,12:28,17:52"#,
+2022-01-03,07:03,12:28,17:52",
                 );
 
                 let Response(r3) = response_from_str!(

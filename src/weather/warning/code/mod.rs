@@ -44,6 +44,7 @@ pub enum WarningSubtypeCode {
     TC8NW,  // No. 8 North West Tropical Cyclone Warning
     TC9,    // No. 9 Tropical Cyclone Warning
     TC10,   // No. 10 Tropical Cyclone Warning
+    CANCEL, // Cancel All Signals
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq)]

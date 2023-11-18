@@ -55,7 +55,7 @@ impl FromStr for Response {
 
             data.into_iter()
                 .filter_map(|v| {
-                    let month = v.get(0)?.parse::<u32>().ok()?;
+                    let month = v.first()?.parse::<u32>().ok()?;
                     let day = v.get(1)?.parse::<u32>().ok()?;
 
                     Some(
@@ -135,6 +135,7 @@ pub fn url(
     ))
 }
 
+#[allow(clippy::missing_errors_doc)]
 #[cfg(feature = "fetch")]
 #[doc(cfg(feature = "fetch"))]
 pub async fn fetch(
@@ -167,17 +168,17 @@ mod test {
     fn test() {
         // CSV with header
         let Response(r1) = response_from_str!(
-            r#"Month,Date,Time,Height(m),Time,Height(m),Time,Height(m),Time,Height(m)
+            r"Month,Date,Time,Height(m),Time,Height(m),Time,Height(m),Time,Height(m)
 01,01,0219,0.53,0930,1.55,1308,1.26,1934,2.60
 01,02,0313,0.31,1030,1.55,,,,
-01,03,0406,0.18,1121,1.54,1443,1.30,,"#,
+01,03,0406,0.18,1121,1.54,1443,1.30,,",
         );
 
         // CSV without header
         let Response(r2) = response_from_str!(
-            r#"01,01,0219,0.53,0930,1.55,1308,1.26,1934,2.60
+            r"01,01,0219,0.53,0930,1.55,1308,1.26,1934,2.60
 01,02,0313,0.31,1030,1.55,,,,
-01,03,0406,0.18,1121,1.54,1443,1.30,,"#,
+01,03,0406,0.18,1121,1.54,1443,1.30,,",
         );
 
         // JSON

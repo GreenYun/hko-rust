@@ -37,6 +37,7 @@ pub(crate) use impl_api;
 /// import any dependency feature providing TLS/HTTPS connection function.
 /// Add your favorite TLS implementation to your `Cargo.toml` to fix this
 /// problem. See the documentation of [`reqwest`] for more information.
+#[allow(clippy::missing_errors_doc)]
 #[cfg(feature = "fetch")]
 #[doc(cfg(feature = "fetch"))]
 pub async fn fetch<T>(lang: Lang) -> anyhow::Result<T>

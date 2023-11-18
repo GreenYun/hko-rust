@@ -124,6 +124,10 @@ impl EnumNameDesc for WarningSubtypeCode {
                 "Hurricane Signal No. 10",
                 "十號颶風信號",
                 "十号飓风信号",
+            WarningSubtypeCode::CANCEL =>
+                "Cancel All Signals",
+                "取消所有熱帶氣旋警告信號",
+                "取消所有热带气旋警告信号",
         }
         .to_owned()
     }

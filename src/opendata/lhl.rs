@@ -46,7 +46,7 @@ impl FromStr for Response {
 
             data.into_iter()
                 .filter_map(|v| {
-                    let time = v.get(0)?.split('-').collect::<Vec<_>>();
+                    let time = v.first()?.split('-').collect::<Vec<_>>();
                     let start_time = NaiveDateTime::parse_from_str(time.first()?, "%Y%m%d%H%M").ok()?;
                     let start_time = hkt().from_local_datetime(&start_time).single()?;
 
@@ -117,6 +117,7 @@ pub fn url(lang: &Lang, response_format: Option<ResponseFormat>) -> String {
     )
 }
 
+#[allow(clippy::missing_errors_doc)]
 #[cfg(feature = "fetch")]
 #[doc(cfg(feature = "fetch"))]
 pub async fn fetch(lang: Lang, response_format: Option<ResponseFormat>) -> anyhow::Result<Response> {
