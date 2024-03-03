@@ -1,4 +1,4 @@
-// Copyright (c) 2021 - 2023 GreenYun Organization
+// Copyright (c) 2021 - 2024 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 //! Provides regional weather in Hong Kong - latest 10-minute mean visibility.
@@ -13,7 +13,7 @@ use crate::{
     common::{Lang, ValUnit},
     error::DataError,
     internal::hkt,
-    opendata::{concat_url, ResponseFormat},
+    opendata::ResponseFormat,
 };
 
 #[derive(Clone, Debug)]

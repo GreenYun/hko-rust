@@ -1,4 +1,4 @@
-// Copyright (c) 2021 - 2023 GreenYun Organization
+// Copyright (c) 2021 - 2024 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 //! Provides cloud-to-ground and cloud-to-cloud lightning count over Hong Kong
@@ -9,12 +9,7 @@ use std::str::FromStr;
 use chrono::{DateTime, FixedOffset, NaiveDateTime, TimeZone};
 use serde::Deserialize;
 
-use crate::{
-    common::Lang,
-    error::DataError,
-    internal::hkt,
-    opendata::{concat_url, ResponseFormat},
-};
+use crate::{common::Lang, error::DataError, internal::hkt, opendata::ResponseFormat};
 
 #[derive(Clone, Debug)]
 pub struct ResponseUnit {

@@ -1,10 +1,8 @@
-// Copyright (c) 2021 - 2023 GreenYun Organization
+// Copyright (c) 2021 - 2024 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 use serde::Deserialize;
 use strum::EnumString;
-
-use crate::impl_display_traits;
 
 /// Warning statement code.
 ///

@@ -1,4 +1,4 @@
-// Copyright (c) 2021 - 2023 GreenYun Organization
+// Copyright (c) 2021 - 2024 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 //! Provides predicted tidal information. (Hourly heights of astronomical tides)
@@ -9,7 +9,7 @@ use serde::Deserialize;
 
 use crate::{
     error::{APIRequestError, DataError},
-    opendata::{concat_url, ResponseFormat, SeaStation},
+    opendata::{ResponseFormat, SeaStation},
 };
 
 #[derive(Clone, Debug)]

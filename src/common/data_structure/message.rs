@@ -1,4 +1,4 @@
-// Copyright (c) 2021 - 2023 GreenYun Organization
+// Copyright (c) 2021 - 2024 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 use std::{marker::PhantomData, ptr::NonNull, vec};
@@ -61,7 +61,7 @@ impl Message {
     #[must_use]
     pub fn iter(&self) -> Iter {
         let (ptr, len) = match self {
-            Self::String(x) => (x as *const String, 1),
+            Self::String(x) => (std::ptr::from_ref(x), 1),
             Self::List(x) => (x.as_ptr(), x.len()),
         };
 
