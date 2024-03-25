@@ -9,7 +9,7 @@ license = "MIT"
 name = "hko"
 readme = "README.md"
 repository = "https://github.com/GreenYun/hko-rust"
-version = "1.11.1"
+version = "1.11.2"
 
 [features]
 default = ["earthquake", "hourly_rainfall", "lunardate", "opendata", "weather"]
@@ -23,18 +23,18 @@ weather = ["num-derive", "num-traits"]
 
 [dependencies]
 anyhow = {version = "1", optional = true}
-chrono = {version = "0.4", features = ["serde"]}
+chrono = {version = "0.4", default-features = false, features = ["alloc", "serde"]}
 csv = {version = "1", optional = true}
 nom = {version = "7", optional = true}
 num-derive = {version = "0.4", optional = true}
 num-traits = {version = "0.2", optional = true}
-reqwest = {version = "0.11", optional = true, default-features = false}
+reqwest = {version = "0.12", optional = true, default-features = false}
 serde = {version = "1", features = ["derive"]}
 serde_json = {version = "1", optional = true}
 strum = {version = ">=0.22", features = ["derive"]}
 
 [dev-dependencies]
-reqwest = {version = "0.11", features = ["native-tls", "json"]}
+reqwest = {version = "0.12", features = ["native-tls", "json"]}
 tokio = {version = "1", features = ["macros", "rt"], default-features = false}
 
 [package.metadata.docs.rs]
