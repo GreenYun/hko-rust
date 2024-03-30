@@ -10,6 +10,7 @@ use super::PSR;
 use crate::{
     common::{PlaceValUnit, ValUnit},
     fetch::impl_api,
+    weather::Name as WeatherName,
 };
 
 /// 9-day weather forecast of Hong Kong.
@@ -69,13 +70,13 @@ pub struct WeatherForcast {
 
     /// Forecast weather icon
     ///
-    /// To retrieve icons, use [`icon_uri`] macro to obtain the URI.
+    /// To retrieve icons, use [`icon_uri`](WeatherName::icon_uri).
     ///
     /// Visit
     /// [hko.gov.hk](https://www.hko.gov.hk/textonly/v2/explain/wxicon_e.htm)
     /// for more details.
     #[serde(rename = "ForecastIcon")]
-    pub icon: i32,
+    pub icon: WeatherName,
 
     /// Probability of significant rain
     #[serde(rename = "PSR")]

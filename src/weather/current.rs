@@ -11,6 +11,7 @@ use serde::Deserialize;
 use crate::{
     common::{Message, PlaceValUnit},
     fetch::impl_api,
+    weather::Name as WeatherName,
 };
 
 /// Current weather report of Hong Kong.
@@ -97,10 +98,10 @@ pub struct Rainfall {
 
 /// A List of weather icons.
 ///
-/// Each `icon` (as primitive type [`i32`]) can be converted to
-/// [`Name`](crate::weather::Name) for some weather description.
+/// Each `icon` of [`WeatherName`] for some weather description.
 ///
-/// To retrieve icons, use [`icon_uri`] macro to obtain the URI.
+/// To retrieve icons, use [`icon_uri`](WeatherName::icon_uri) to obtain the
+/// URI.
 ///
 /// Visit
 /// [hko.gov.hk](https://www.hko.gov.hk/textonly/v2/explain/wxicon_e.htm) for
@@ -108,7 +109,7 @@ pub struct Rainfall {
 #[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Icon {
-    pub icon: Vec<i32>,
+    pub icon: Vec<WeatherName>,
 
     #[serde(rename = "iconUpdateTime")]
     pub update_time: DateTime<FixedOffset>,

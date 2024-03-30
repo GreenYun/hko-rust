@@ -6,9 +6,7 @@
 
 #[tokio::test]
 async fn current_test() {
-    use num_traits::FromPrimitive;
-
-    use crate::weather::{current::Current, Name};
+    use crate::weather::current::Current;
 
     let test_input = {
         r#"{
@@ -94,7 +92,7 @@ async fn current_test() {
     let current: Current = serde_json::from_str(test_input).unwrap();
     println!("{:?}", current);
     assert_eq!(current.temperature.data[0].value, 31.);
-    println!("{:o}", Name::from_i32(current.icon.icon[0]).unwrap());
+    println!("{:o}", current.icon.icon[0]);
 
     #[cfg(feature = "fetch")]
     {

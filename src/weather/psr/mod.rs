@@ -36,3 +36,12 @@ impl FromStr for PSR {
 mod string;
 
 impl_display_traits!(PSR);
+
+impl PSR {
+    /// Generates the URI of specified PSR icon, usually an HTTPS link.
+    #[inline]
+    #[must_use]
+    pub fn icon_uri(&self) -> String {
+        format!("https://www.hko.gov.hk/common/images/PSR{self:?}_50_light.png")
+    }
+}

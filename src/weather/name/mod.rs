@@ -1,10 +1,11 @@
 // Copyright (c) 2021 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
-use num_derive::{FromPrimitive, ToPrimitive};
+use serde_repr::Deserialize_repr;
 
 /// Weather status names.
-#[derive(Clone, Copy, Debug, Eq, FromPrimitive, Hash, PartialEq, ToPrimitive)]
+#[derive(Clone, Copy, Debug, Deserialize_repr, Eq, Hash, PartialEq)]
+#[repr(u32)]
 pub enum Name {
     Sunny                       = 50,
     SunnyPeriods                = 51,
@@ -44,3 +45,15 @@ pub enum Name {
 mod string;
 
 impl_display_traits!(Name);
+
+impl Name {
+    /// Generates the URI of specified weather icon, usually an HTTPS link.
+    #[inline]
+    #[must_use]
+    pub fn icon_uri(&self) -> String {
+        format!(
+            "https://www.hko.gov.hk/images/HKOWxIconOutline/pic{:?}.png",
+            (*self as u32)
+        )
+    }
+}

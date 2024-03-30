@@ -1,22 +1,6 @@
 // Copyright (c) 2021 - 2023 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
-/// Generates the URI of specified weather icon, usually an HTTPS link.
-#[macro_export]
-macro_rules! icon_uri {
-    ($i:expr) => {
-        format!("https://www.hko.gov.hk/images/HKOWxIconOutline/pic{:?}.png", $i)
-    };
-}
-
-/// Generates the URI of specified PSR icon, usually an HTTPS link.
-#[macro_export]
-macro_rules! psr_icon_uri {
-    ($psr:expr) => {
-        format!("https://www.hko.gov.hk/common/images/PSR{:?}_50_light.png", $psr)
-    };
-}
-
 macro_rules! impl_display_traits_internal {
     ($t:ty; $($tr:ident, $lang:ident, $f:ident, $s:ident, $($doc_lang:ident)+);+ $(;)?) => {
         $(
