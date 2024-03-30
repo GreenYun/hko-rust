@@ -9,7 +9,7 @@ license = "MIT"
 name = "hko"
 readme = "README.md"
 repository = "https://github.com/GreenYun/hko-rust"
-version = "1.11.2"
+version = "1.11.3"
 
 [features]
 default = ["earthquake", "hourly_rainfall", "lunardate", "opendata", "weather"]
@@ -34,8 +34,8 @@ serde_json = {version = "1", optional = true}
 strum = {version = ">=0.22", features = ["derive"]}
 
 [dev-dependencies]
-reqwest = {version = "0.12", features = ["native-tls", "json"]}
-tokio = {version = "1", features = ["macros", "rt"], default-features = false}
+reqwest = {version = "0.12", features = ["rustls-tls", "json"]}
+tokio = {version = "1", default-features = false, features = ["macros", "rt"]}
 
 [package.metadata.docs.rs]
 features = ["earthquake", "fetch", "hourly_rainfall", "lunardate", "opendata", "weather"]

@@ -186,7 +186,7 @@ impl FromStr for Response {
                 let val_to_f32 = || val.as_str().and_then(|s| s.parse().ok());
 
                 match index {
-                    0 => data.name = val.as_str().unwrap().to_owned(),
+                    0 => val.as_str().unwrap().clone_into(&mut data.name),
                     1 => data.microsieverts = val_to_f32(),
                     2 => data.max_temp = val_to_f32(),
                     3 => data.min_temp = val_to_f32(),

@@ -17,9 +17,10 @@
 //! [hko.gov.hk](https://www.weather.gov.hk/en/abouthko/opendata_intro.htm) (or
 //! [中文](https://www.weather.gov.hk/tc/abouthko/opendata_intro.htm)).
 
-#[cfg(feature = "fetch")]
-pub use self::fetch::fetch;
 pub use self::fetch::API;
+
+#[cfg(feature = "fetch")]
+pub use self::fetch::{fetch, Fetch};
 
 #[macro_use]
 mod r#macro;

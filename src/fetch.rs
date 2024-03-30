@@ -31,6 +31,28 @@ macro_rules! impl_api {
 #[allow(unused_imports)]
 pub(crate) use impl_api;
 
+/// Helper trait to fetch data from API.
+#[cfg(feature = "fetch")]
+#[doc(cfg(feature = "fetch"))]
+pub trait Fetch: Sized {
+    /// Fetch function for API.
+    #[allow(clippy::missing_errors_doc)]
+    fn fetch(lang: Lang) -> impl std::future::Future<Output = anyhow::Result<Self>> + Send;
+}
+
+#[cfg(feature = "fetch")]
+#[doc(cfg(feature = "fetch"))]
+impl<T> Fetch for T
+where
+    T: API + serde::de::DeserializeOwned,
+{
+    async fn fetch(lang: Lang) -> anyhow::Result<Self> {
+        use reqwest::get;
+
+        Ok(serde_json::from_str(&get(Self::url(lang)).await?.text().await?)?)
+    }
+}
+
 /// Helper function to fetch data from API.
 ///
 /// You may found connection error from [`reqwest`], because this crate has not
@@ -42,9 +64,7 @@ pub(crate) use impl_api;
 #[doc(cfg(feature = "fetch"))]
 pub async fn fetch<T>(lang: Lang) -> anyhow::Result<T>
 where
-    T: API + serde::de::DeserializeOwned,
+    T: Fetch,
 {
-    use reqwest::get;
-
-    Ok(serde_json::from_str(&get(T::url(lang)).await?.text().await?)?)
+    T::fetch(lang).await
 }
