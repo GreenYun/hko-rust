@@ -1,4 +1,4 @@
-name: Build and test on Rust Nightly
+name: Build and test
 
 on:
   push:
@@ -15,15 +15,14 @@ jobs:
     strategy:
       matrix:
         platforms:
-          - macos-13
-          - macos-14
+          - macos-latest
           - ubuntu-latest
           - windows-latest
     runs-on: ${{ matrix.platforms }}
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@nightly
+      - uses: dtolnay/rust-toolchain@stable
       - name: Build
-        run: cargo +nightly build --verbose --all-features
+        run: cargo build --verbose --all-features
       - name: Test
-        run: cargo +nightly test --verbose --all-features
+        run: cargo test --verbose --all-features
