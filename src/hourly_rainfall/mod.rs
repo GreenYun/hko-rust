@@ -74,7 +74,6 @@ pub fn url(lang: &Lang) -> String {
 
 #[allow(clippy::missing_errors_doc)]
 #[cfg(feature = "fetch")]
-#[doc(cfg(feature = "fetch"))]
 pub async fn fetch(lang: &Lang) -> anyhow::Result<Response> {
     use reqwest::get;
 

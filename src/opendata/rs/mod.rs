@@ -162,7 +162,6 @@ macro_rules! impl_rs {
 
         #[allow(clippy::missing_errors_doc)]
         #[cfg(feature = "fetch")]
-        #[doc(cfg(feature = "fetch"))]
         pub async fn fetch(
             year: i32,
             month: Option<u32>,

@@ -33,7 +33,6 @@ pub(crate) use impl_api;
 
 /// Helper trait to fetch data from API.
 #[cfg(feature = "fetch")]
-#[doc(cfg(feature = "fetch"))]
 pub trait Fetch: Sized {
     /// Fetch function for API.
     #[allow(clippy::missing_errors_doc)]
@@ -41,7 +40,6 @@ pub trait Fetch: Sized {
 }
 
 #[cfg(feature = "fetch")]
-#[doc(cfg(feature = "fetch"))]
 impl<T> Fetch for T
 where
     T: API + serde::de::DeserializeOwned,
@@ -61,7 +59,6 @@ where
 /// problem. See the documentation of [`reqwest`] for more information.
 #[allow(clippy::missing_errors_doc)]
 #[cfg(feature = "fetch")]
-#[doc(cfg(feature = "fetch"))]
 pub async fn fetch<T>(lang: Lang) -> anyhow::Result<T>
 where
     T: Fetch,

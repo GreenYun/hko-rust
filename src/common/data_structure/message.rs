@@ -61,7 +61,7 @@ impl Message {
     #[must_use]
     pub fn iter(&self) -> Iter {
         let (ptr, len) = match self {
-            Self::String(x) => (std::ptr::from_ref(x), 1),
+            Self::String(x) => (std::ptr::from_ref(x), 0),
             Self::List(x) => (x.as_ptr(), x.len()),
         };
 
@@ -79,9 +79,10 @@ impl IntoIterator for Message {
     type IntoIter = std::vec::IntoIter<Self::Item>;
     type Item = String;
 
+    // Returned empty iterator if `self` is a string.
     fn into_iter(self) -> Self::IntoIter {
         match self {
-            Self::String(x) => vec![x],
+            Self::String(_) => vec![],
             Self::List(x) => x,
         }
         .into_iter()

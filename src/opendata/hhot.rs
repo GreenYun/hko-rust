@@ -184,7 +184,6 @@ pub fn url(
 
 #[allow(clippy::missing_errors_doc)]
 #[cfg(feature = "fetch")]
-#[doc(cfg(feature = "fetch"))]
 pub async fn fetch(
     station: SeaStation,
     year: i32,

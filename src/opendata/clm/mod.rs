@@ -198,7 +198,6 @@ macro_rules! impl_clm {
 
         #[allow(clippy::missing_errors_doc)]
         #[cfg(feature = "fetch")]
-        #[doc(cfg(feature = "fetch"))]
         pub async fn fetch(
             station: TempStation,
             year: Option<u32>,

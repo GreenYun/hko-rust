@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: MIT
 
 #![allow(unused_macros)]
-#![feature(doc_cfg)]
 
 //! This is a library for users to access Hong Kong Observatory Open Data API.
 //!
@@ -33,21 +32,16 @@ pub mod common;
 pub mod error;
 
 #[cfg(feature = "earthquake")]
-#[doc(cfg(feature = "earthquake"))]
 pub mod earthquake;
 
 #[cfg(feature = "hourly_rainfall")]
-#[doc(cfg(feature = "hourly_rainfall"))]
 pub mod hourly_rainfall;
 
 #[cfg(feature = "lunardate")]
-#[doc(cfg(feature = "lunardate"))]
 pub mod lunardate;
 
 #[cfg(feature = "opendata")]
-#[doc(cfg(feature = "opendata"))]
 pub mod opendata;
 
 #[cfg(feature = "weather")]
-#[doc(cfg(feature = "weather"))]
 pub mod weather;

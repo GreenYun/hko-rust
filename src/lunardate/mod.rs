@@ -41,7 +41,6 @@ pub fn url(date: NaiveDate) -> Result<String, APIRequestError> {
 
 #[allow(clippy::missing_errors_doc)]
 #[cfg(feature = "fetch")]
-#[doc(cfg(feature = "fetch"))]
 pub async fn fetch(date: NaiveDate) -> anyhow::Result<Response> {
     use reqwest::get;
 

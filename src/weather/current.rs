@@ -26,7 +26,11 @@ pub struct Current {
 
     #[serde(rename = "uvindex")]
     pub uv_index: UVIndexOrEmpty,
-    pub warning_message: Option<Message>,
+    pub update_time: DateTime<FixedOffset>,
+
+    /// Return a List. If no data for warning message, empty string will be returned.
+    /// This should be fixed in the future version.
+    pub warning_message: Message,
     pub rainstorm_reminder: Option<String>,
 
     /// Special weather tips
@@ -37,19 +41,18 @@ pub struct Current {
     pub tcmessage: Option<Message>,
 
     /// Minimum temperature from midnight to 9 am
-    pub mintemp_from00_to09: String,
+    pub mintemp_from00_to09: Option<String>,
 
     /// Accumulated rainfall at HKO from midnight to noon
-    pub rainfall_from00_to12: String,
+    pub rainfall_from00_to12: Option<String>,
 
     /// Rainfall in last month
-    pub rainfall_last_month: String,
+    pub rainfall_last_month: Option<String>,
 
     /// Accumulated rainfall from January to last month
-    pub rainfall_january_to_last_month: String,
+    pub rainfall_january_to_last_month: Option<String>,
     pub temperature: Temperature,
     pub humidity: Humidity,
-    pub update_time: DateTime<FixedOffset>,
 }
 
 /// Whether lightning `occur`s in `place`.
