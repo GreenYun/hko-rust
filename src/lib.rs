@@ -19,7 +19,7 @@
 pub use self::fetch::API;
 
 #[cfg(feature = "fetch")]
-pub use self::fetch::{fetch, Fetch};
+pub use self::fetch::{fetch, fetch_with_client, Fetch};
 
 #[macro_use]
 mod r#macro;

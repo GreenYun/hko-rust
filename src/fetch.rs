@@ -76,3 +76,18 @@ where
 {
     T::fetch(lang).await
 }
+
+/// Helper function to fetch data from API with custom client.
+///
+/// You may found connection error from [`reqwest`], because this crate has not
+/// import any dependency feature providing TLS/HTTPS connection function.
+/// Add your favorite TLS implementation to your `Cargo.toml` to fix this
+/// problem. See the documentation of [`reqwest`] for more information.
+#[allow(clippy::missing_errors_doc, clippy::module_name_repetitions)]
+#[cfg(feature = "fetch")]
+pub async fn fetch_with_client<T>(lang: Lang, client: reqwest::Client) -> anyhow::Result<T>
+where
+    T: Fetch,
+{
+    T::fetch_with_client(lang, client).await
+}
