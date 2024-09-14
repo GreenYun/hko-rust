@@ -37,6 +37,13 @@ pub trait Fetch: Sized {
     /// Fetch function for API.
     #[allow(clippy::missing_errors_doc)]
     fn fetch(lang: Lang) -> impl std::future::Future<Output = anyhow::Result<Self>> + Send;
+
+    /// Fetch function for API, with custom client.
+    #[allow(clippy::missing_errors_doc)]
+    fn fetch_with_client(
+        lang: Lang,
+        client: reqwest::Client,
+    ) -> impl std::future::Future<Output = anyhow::Result<Self>> + Send;
 }
 
 #[cfg(feature = "fetch")]
@@ -47,7 +54,11 @@ where
     async fn fetch(lang: Lang) -> anyhow::Result<Self> {
         use reqwest::get;
 
-        Ok(serde_json::from_str(&get(Self::url(lang)).await?.text().await?)?)
+        Ok(get(Self::url(lang)).await?.json().await?)
+    }
+
+    async fn fetch_with_client(lang: Lang, client: reqwest::Client) -> anyhow::Result<Self> {
+        Ok(client.get(Self::url(lang)).send().await?.json().await?)
     }
 }
 
