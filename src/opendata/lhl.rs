@@ -7,9 +7,10 @@
 use std::str::FromStr;
 
 use chrono::{DateTime, FixedOffset, NaiveDateTime, TimeZone};
+use chrono_tz::Hongkong;
 use serde::Deserialize;
 
-use crate::{common::Lang, error::DataError, internal::hkt, opendata::ResponseFormat};
+use crate::{common::Lang, error::DataError, opendata::ResponseFormat};
 
 #[derive(Clone, Debug)]
 pub struct ResponseUnit {
@@ -43,10 +44,10 @@ impl FromStr for Response {
                 .filter_map(|v| {
                     let time = v.first()?.split('-').collect::<Vec<_>>();
                     let start_time = NaiveDateTime::parse_from_str(time.first()?, "%Y%m%d%H%M").ok()?;
-                    let start_time = hkt().from_local_datetime(&start_time).single()?;
+                    let start_time = Hongkong.from_local_datetime(&start_time).single()?.fixed_offset();
 
                     let end_time = NaiveDateTime::parse_from_str(time.get(1)?, "%Y%m%d%H%M").ok()?;
-                    let end_time = hkt().from_local_datetime(&end_time).single()?;
+                    let end_time = Hongkong.from_local_datetime(&end_time).single()?.fixed_offset();
 
                     let r#type = v.get(1)?.clone();
                     let region = v.get(2)?.clone();
@@ -85,10 +86,10 @@ impl FromStr for Response {
                     let time = time.split('-').collect::<Vec<_>>();
 
                     let start_time = NaiveDateTime::parse_from_str(time.first()?, "%Y%m%d%H%M").ok()?;
-                    let start_time = hkt().from_local_datetime(&start_time).single()?;
+                    let start_time = Hongkong.from_local_datetime(&start_time).single()?.fixed_offset();
 
                     let end_time = NaiveDateTime::parse_from_str(time.get(1)?, "%Y%m%d%H%M").ok()?;
-                    let end_time = hkt().from_local_datetime(&end_time).single()?;
+                    let end_time = Hongkong.from_local_datetime(&end_time).single()?.fixed_offset();
 
                     Some(ResponseUnit {
                         start_time,

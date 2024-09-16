@@ -1,4 +1,4 @@
-// Copyright (c) 2023 GreenYun Organization
+// Copyright (c) 2023 - 2024 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 //! Rainfall in the past hour from automatic weather station

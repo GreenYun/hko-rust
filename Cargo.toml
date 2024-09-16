@@ -9,21 +9,22 @@ license = "MIT"
 name = "hko"
 readme = "README.md"
 repository = "https://github.com/GreenYun/hko-rust"
-version = "1.11.7"
+version = "1.11.8"
 
 [features]
 default = ["earthquake", "hourly_rainfall", "lunardate", "opendata", "weather"]
 earthquake = []
-fetch = ["anyhow", "reqwest/json", "serde_json"]
+fetch = ["dep:anyhow", "dep:reqwest", "reqwest?/json", "dep:serde_json"]
 hourly_rainfall = []
 lunardate = []
-opendata = ["csv", "nom", "serde_json"]
-test = ["serde_json"]
-weather = ["serde_repr"]
+opendata = ["dep:csv", "dep:nom", "dep:serde_json"]
+test = ["dep:serde_json"]
+weather = ["dep:serde_repr"]
 
 [dependencies]
 anyhow = {version = "1", optional = true}
 chrono = {version = "0.4", default-features = false, features = ["alloc", "serde"]}
+chrono-tz = "0.10"
 csv = {version = "1", optional = true}
 nom = {version = "7", optional = true}
 reqwest = {version = "0.12", optional = true, default-features = false}

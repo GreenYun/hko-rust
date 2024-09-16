@@ -7,12 +7,12 @@
 use std::str::FromStr;
 
 use chrono::{DateTime, FixedOffset, NaiveDateTime, TimeZone};
+use chrono_tz::Hongkong;
 use serde::Deserialize;
 
 use crate::{
     common::{Lang, ValUnit},
     error::DataError,
-    internal::hkt,
     opendata::ResponseFormat,
 };
 
@@ -45,7 +45,7 @@ impl FromStr for Response {
             data.into_iter()
                 .filter_map(|v| {
                     let time = NaiveDateTime::parse_from_str(v.first()?, "%Y%m%d%H%M").ok()?;
-                    let time = hkt().from_local_datetime(&time).single()?;
+                    let time = Hongkong.from_local_datetime(&time).single()?.fixed_offset();
 
                     let station = v.get(1)?.to_string();
 
@@ -89,7 +89,7 @@ impl FromStr for Response {
                     } = r.ok()?.deserialize(None).ok()?;
 
                     let time = NaiveDateTime::parse_from_str(time.as_str(), "%Y%m%d%H%M").ok()?;
-                    let time = hkt().from_local_datetime(&time).single()?;
+                    let time = Hongkong.from_local_datetime(&time).single()?.fixed_offset();
 
                     let visibility = {
                         use nom::{error, number::complete};

@@ -1,4 +1,4 @@
-// Copyright (c) 2022 - 2023 GreenYun Organization
+// Copyright (c) 2022 - 2024 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 //! Provides weather and radiation level report.
@@ -6,11 +6,12 @@
 use std::{collections::HashMap, str::FromStr};
 
 use chrono::{DateTime, FixedOffset, NaiveDate, NaiveDateTime, TimeZone};
+use chrono_tz::Hongkong;
 use serde::Deserialize;
 use serde_json::Value;
 
 use super::WeatherStation;
-use crate::{common::Lang, error::DataError, internal::hkt};
+use crate::{common::Lang, error::DataError};
 
 /// Data retrieved from a station.
 #[derive(Clone, Debug)]
@@ -147,10 +148,11 @@ impl FromStr for Response {
 
         let bulletin_date_time = NaiveDateTime::parse_from_str(&(bulletin_date + &bulletin_time), "%Y%m%d%H%M")
             .map_err(|e| DataError::SourceFormat(e.to_string()))?;
-        let bulletin_date_time = hkt()
+        let bulletin_date_time = Hongkong
             .from_local_datetime(&bulletin_date_time)
             .single()
-            .ok_or_else(|| DataError::SourceFormat("Invalid time".to_owned()))?;
+            .ok_or_else(|| DataError::SourceFormat("Invalid time".to_owned()))?
+            .fixed_offset();
 
         let note_desc = vec![note_desc, note_desc1, note_desc2, note_desc3]
             .into_iter()

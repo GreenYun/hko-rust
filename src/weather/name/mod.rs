@@ -1,9 +1,10 @@
-// Copyright (c) 2021 - 2023 GreenYun Organization
+// Copyright (c) 2021 - 2024 GreenYun Organization
 // SPDX-License-Identifier: MIT
 
 use serde_repr::Deserialize_repr;
 
 /// Weather status names.
+#[rustfmt::skip]
 #[derive(Clone, Copy, Debug, Deserialize_repr, Eq, Hash, PartialEq)]
 #[repr(u32)]
 pub enum Name {
