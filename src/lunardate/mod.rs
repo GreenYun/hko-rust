@@ -29,7 +29,7 @@ pub struct Response {
 /// Returns [`APIRequestError`] if specified date is not illegal or out of
 /// range.
 pub fn url(date: NaiveDate) -> Result<String, APIRequestError> {
-    if !matches!(date.year(), 2023 | 2024) {
+    if !matches!(date.year(), 2023..=2027) {
         return Err(APIRequestError("date must be between 2023-01-01 and 2024-12-31".into()));
     }
 
