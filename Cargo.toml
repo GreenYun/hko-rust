@@ -9,7 +9,7 @@ license = "MIT"
 name = "hko"
 readme = "README.md"
 repository = "https://github.com/GreenYun/hko-rust"
-version = "1.12.0"
+version = "1.12.1"
 
 [features]
 default = ["earthquake", "hourly_rainfall", "lunardate", "opendata", "weather"]
