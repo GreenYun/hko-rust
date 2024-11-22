@@ -7,7 +7,7 @@ use strum::Display;
 /// `EN` for English,
 /// `SC` for Simplified Chinese, and
 /// `TC` for Traditional Chinese.
-#[derive(Display)]
+#[derive(Clone, Copy, Display)]
 #[strum(serialize_all = "lowercase")]
 pub enum Lang {
     EN,

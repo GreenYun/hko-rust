@@ -74,10 +74,18 @@ pub fn url(lang: &Lang) -> String {
 
 #[allow(clippy::missing_errors_doc)]
 #[cfg(feature = "fetch")]
+#[cfg_attr(docsrs, doc(cfg(feature = "fetch")))]
 pub async fn fetch(lang: &Lang) -> anyhow::Result<Response> {
-    use reqwest::get;
+    let client = reqwest::Client::builder().build()?;
 
-    Ok(serde_json::from_str(&get(url(lang)).await?.text().await?)?)
+    fetch_with_client(lang, client).await
+}
+
+#[allow(clippy::missing_errors_doc)]
+#[cfg(feature = "fetch")]
+#[cfg_attr(docsrs, doc(cfg(feature = "fetch")))]
+pub async fn fetch_with_client(lang: &Lang, client: reqwest::Client) -> anyhow::Result<Response> {
+    Ok(client.get(url(lang)).send().await?.json().await?)
 }
 
 #[cfg(feature = "test")]

@@ -41,10 +41,18 @@ pub fn url(date: NaiveDate) -> Result<String, APIRequestError> {
 
 #[allow(clippy::missing_errors_doc)]
 #[cfg(feature = "fetch")]
+#[cfg_attr(docsrs, doc(cfg(feature = "fetch")))]
 pub async fn fetch(date: NaiveDate) -> anyhow::Result<Response> {
-    use reqwest::get;
+    let client = reqwest::Client::builder().build()?;
 
-    Ok(serde_json::from_str(&get(url(date)?).await?.text().await?)?)
+    fetch_with_client(date, client).await
+}
+
+#[allow(clippy::missing_errors_doc)]
+#[cfg(feature = "fetch")]
+#[cfg_attr(docsrs, doc(cfg(feature = "fetch")))]
+pub async fn fetch_with_client(date: NaiveDate, client: reqwest::Client) -> anyhow::Result<Response> {
+    Ok(client.get(url(date)?).send().await?.json().await?)
 }
 
 #[cfg(feature = "test")]

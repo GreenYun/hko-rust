@@ -107,7 +107,7 @@ pub struct Iter<'a> {
     _marker: PhantomData<&'a String>,
 }
 
-impl<'a> Iter<'a> {
+impl Iter<'_> {
     #[inline]
     fn post_inc_start(&mut self) -> *const String {
         let old = self.ptr.as_ptr();

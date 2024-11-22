@@ -198,20 +198,36 @@ macro_rules! impl_clm {
 
         #[allow(clippy::missing_errors_doc)]
         #[cfg(feature = "fetch")]
+        #[cfg_attr(docsrs, doc(cfg(feature = "fetch")))]
         pub async fn fetch(
             station: TempStation,
             year: Option<u32>,
             month: Option<u32>,
             response_format: Option<ResponseFormat>,
         ) -> anyhow::Result<Response> {
-            use reqwest::get;
+            let client = reqwest::Client::builder().build()?;
 
-            Ok(Response::from_str(
-                &get(url(station, year, month, response_format)?)
-                    .await?
-                    .text()
-                    .await?,
-            )?)
+            fetch_with_client(station, year, month, response_format, client).await
+        }
+
+        #[allow(clippy::missing_errors_doc)]
+        #[cfg(feature = "fetch")]
+        #[cfg_attr(docsrs, doc(cfg(feature = "fetch")))]
+        pub async fn fetch_with_client(
+            station: TempStation,
+            year: Option<u32>,
+            month: Option<u32>,
+            response_format: Option<ResponseFormat>,
+            client: reqwest::Client,
+        ) -> anyhow::Result<Response> {
+            let resp = client
+                .get(url(station, year, month, response_format)?)
+                .send()
+                .await?
+                .text()
+                .await?;
+
+            Ok(Response::from_str(&resp)?)
         }
 
         #[cfg(feature = "test")]

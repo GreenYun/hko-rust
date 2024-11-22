@@ -230,8 +230,23 @@ pub fn url(date: NaiveDate, lang: Option<Lang>, station: Option<WeatherStation>)
 
 #[allow(clippy::missing_errors_doc)]
 #[cfg(feature = "fetch")]
+#[cfg_attr(docsrs, doc(cfg(feature = "fetch")))]
 pub async fn fetch(date: NaiveDate, lang: Option<Lang>, station: Option<WeatherStation>) -> anyhow::Result<Response> {
-    use reqwest::get;
+    let client = reqwest::Client::builder().build()?;
 
-    Ok(Response::from_str(&get(url(date, lang, station)).await?.text().await?)?)
+    fetch_with_client(date, lang, station, client).await
+}
+
+#[allow(clippy::missing_errors_doc)]
+#[cfg(feature = "fetch")]
+#[cfg_attr(docsrs, doc(cfg(feature = "fetch")))]
+pub async fn fetch_with_client(
+    date: NaiveDate,
+    lang: Option<Lang>,
+    station: Option<WeatherStation>,
+    client: reqwest::Client,
+) -> anyhow::Result<Response> {
+    let resp = client.get(url(date, lang, station)).send().await?.text().await?;
+
+    Ok(Response::from_str(&resp)?)
 }

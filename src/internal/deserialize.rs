@@ -25,7 +25,7 @@ where
 
     struct BoolVisitor;
 
-    impl<'de> Visitor<'de> for BoolVisitor {
+    impl Visitor<'_> for BoolVisitor {
         type Value = bool;
 
         fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
@@ -56,7 +56,7 @@ where
 
     struct DateVisitor;
 
-    impl<'de> Visitor<'de> for DateVisitor {
+    impl Visitor<'_> for DateVisitor {
         type Value = NaiveDate;
 
         fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
@@ -84,7 +84,7 @@ where
 
     struct PSRVisitor;
 
-    impl<'de> Visitor<'de> for PSRVisitor {
+    impl Visitor<'_> for PSRVisitor {
         type Value = PSR;
 
         fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
@@ -111,7 +111,7 @@ where
 
     struct RainfallValueVisitor;
 
-    impl<'de> Visitor<'de> for RainfallValueVisitor {
+    impl Visitor<'_> for RainfallValueVisitor {
         type Value = RainfallValue;
 
         fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {

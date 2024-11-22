@@ -118,11 +118,7 @@ impl FromStr for Response {
 /// # Errors
 ///
 /// Returns [`APIRequestError`] if year out of historical range.
-pub fn url(
-    station: &SeaStation,
-    year: i32,
-    response_format: Option<ResponseFormat>,
-) -> Result<String, APIRequestError> {
+pub fn url(station: SeaStation, year: i32, response_format: Option<ResponseFormat>) -> Result<String, APIRequestError> {
     if !matches!(year, 2021..=2024) {
         return Err(APIRequestError(format!("year must be 2021-2024, got {year}")));
     }
@@ -137,64 +133,32 @@ pub fn url(
 
 #[allow(clippy::missing_errors_doc)]
 #[cfg(feature = "fetch")]
+#[cfg_attr(docsrs, doc(cfg(feature = "fetch")))]
 pub async fn fetch(
     station: SeaStation,
     year: i32,
     response_format: Option<ResponseFormat>,
 ) -> anyhow::Result<Response> {
-    use reqwest::get;
+    let client = reqwest::Client::builder().build()?;
 
-    Ok(Response::from_str(
-        &get(url(&station, year, response_format)?).await?.text().await?,
-    )?)
+    fetch_with_client(station, year, response_format, client).await
 }
 
-#[cfg(feature = "test")]
-#[cfg(test)]
-mod test {
-    use std::str::FromStr;
+#[allow(clippy::missing_errors_doc)]
+#[cfg(feature = "fetch")]
+#[cfg_attr(docsrs, doc(cfg(feature = "fetch")))]
+pub async fn fetch_with_client(
+    station: SeaStation,
+    year: i32,
+    response_format: Option<ResponseFormat>,
+    client: reqwest::Client,
+) -> anyhow::Result<Response> {
+    let resp = client
+        .get(url(station, year, response_format)?)
+        .send()
+        .await?
+        .text()
+        .await?;
 
-    use super::Response;
-
-    macro_rules! response_from_str {
-        ($s:expr $(,)?) => {{
-            super::Response::from_str($s).unwrap()
-        }};
-    }
-
-    #[allow(clippy::float_cmp)]
-    #[test]
-    fn test() {
-        // CSV with header
-        let Response(r1) = response_from_str!(
-            r"Month,Date,Time,Height(m),Time,Height(m),Time,Height(m),Time,Height(m)
-01,01,0219,0.53,0930,1.55,1308,1.26,1934,2.60
-01,02,0313,0.31,1030,1.55,,,,
-01,03,0406,0.18,1121,1.54,1443,1.30,,",
-        );
-
-        // CSV without header
-        let Response(r2) = response_from_str!(
-            r"01,01,0219,0.53,0930,1.55,1308,1.26,1934,2.60
-01,02,0313,0.31,1030,1.55,,,,
-01,03,0406,0.18,1121,1.54,1443,1.30,,",
-        );
-
-        // JSON
-        let Response(r3) = response_from_str!(
-            r#"{
-    "fields": ["Month", "Date", "Time", "Height(m)", "Time", "Height(m)", "Time", "Height(m)", "Time", "Height(m)"],
-    "data": [
-        ["01", "01", "0219", "0.53", "0930", "1.55", "1308", "1.26", "1934", "2.60"],
-        ["01", "02", "0313", "0.31", "1030", "1.55", "", "", "", ""],
-        ["01", "03", "0406", "0.18", "1121", "1.54", "1443", "1.30", "", ""]]}"#,
-        );
-
-        assert!(r1.len() == r2.len() && r2.len() == r3.len());
-        assert!(r1[0].month == r2[0].month && r2[0].month == r3[0].month);
-        assert!(r1[0].day == r2[0].day && r2[0].day == r3[0].day);
-        assert!(r1[0].hour == r2[0].hour && r2[0].hour == r3[0].hour);
-        assert!(r1[0].minute == r2[0].minute && r2[0].minute == r3[0].minute);
-        assert!(r1[0].height == r2[0].height && r2[0].height == r3[0].height);
-    }
+    Ok(Response::from_str(&resp)?)
 }

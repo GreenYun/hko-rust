@@ -61,7 +61,7 @@ impl FromStr for Response {
                                 Some(ResponseUnit {
                                     month,
                                     day,
-                                    hour: hours.get(i).copied().unwrap_or(i.try_into().unwrap_or(0) + 1),
+                                    hour: hours.get(i).copied().unwrap_or_else(|| i.try_into().unwrap_or(0) + 1),
                                     height,
                                 })
                             })
@@ -108,7 +108,7 @@ impl FromStr for Response {
                                 month,
                                 day,
                                 hour: if has_header {
-                                    hours.get(h).copied().unwrap_or(h.try_into().unwrap_or(0) + 1)
+                                    hours.get(h).copied().unwrap_or_else(|| h.try_into().unwrap_or(0) + 1)
                                 } else {
                                     h.try_into().unwrap_or(0) + 1
                                 },
@@ -130,7 +130,7 @@ impl FromStr for Response {
 /// Returns [`APIRequestError`] if specified date is not illegal or out of
 /// historical range.
 pub fn url(
-    station: &SeaStation,
+    station: SeaStation,
     year: i32,
     month: Option<u32>,
     day: Option<u32>,
@@ -184,6 +184,7 @@ pub fn url(
 
 #[allow(clippy::missing_errors_doc)]
 #[cfg(feature = "fetch")]
+#[cfg_attr(docsrs, doc(cfg(feature = "fetch")))]
 pub async fn fetch(
     station: SeaStation,
     year: i32,
@@ -192,12 +193,29 @@ pub async fn fetch(
     hour: Option<u32>,
     response_format: Option<ResponseFormat>,
 ) -> anyhow::Result<Response> {
-    use reqwest::get;
+    let client = reqwest::Client::builder().build()?;
 
-    Ok(Response::from_str(
-        &get(url(&station, year, month, day, hour, response_format)?)
-            .await?
-            .text()
-            .await?,
-    )?)
+    fetch_with_client(station, year, month, day, hour, response_format, client).await
+}
+
+#[allow(clippy::missing_errors_doc)]
+#[cfg(feature = "fetch")]
+#[cfg_attr(docsrs, doc(cfg(feature = "fetch")))]
+pub async fn fetch_with_client(
+    station: SeaStation,
+    year: i32,
+    month: Option<u32>,
+    day: Option<u32>,
+    hour: Option<u32>,
+    response_format: Option<ResponseFormat>,
+    client: reqwest::Client,
+) -> anyhow::Result<Response> {
+    let resp = client
+        .get(url(station, year, month, day, hour, response_format)?)
+        .send()
+        .await?
+        .text()
+        .await?;
+
+    Ok(Response::from_str(&resp)?)
 }

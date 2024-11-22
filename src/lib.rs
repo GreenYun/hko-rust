@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MIT
 
 #![allow(unused_macros)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
+#![cfg_attr(docsrs, allow(unused_attributes))]
 
 //! This is a library for users to access Hong Kong Observatory Open Data API.
 //!
@@ -19,6 +21,7 @@
 pub use self::fetch::API;
 
 #[cfg(feature = "fetch")]
+#[cfg_attr(docsrs, doc(cfg(feature = "fetch")))]
 pub use self::fetch::{fetch, fetch_with_client, Fetch};
 
 #[macro_use]
@@ -32,16 +35,21 @@ pub mod common;
 pub mod error;
 
 #[cfg(feature = "earthquake")]
+#[cfg_attr(docsrs, doc(cfg(feature = "earthquake")))]
 pub mod earthquake;
 
 #[cfg(feature = "hourly_rainfall")]
+#[cfg_attr(docsrs, doc(cfg(feature = "hourly_rainfall")))]
 pub mod hourly_rainfall;
 
 #[cfg(feature = "lunardate")]
+#[cfg_attr(docsrs, doc(cfg(feature = "lunardate")))]
 pub mod lunardate;
 
 #[cfg(feature = "opendata")]
+#[cfg_attr(docsrs, doc(cfg(feature = "opendata")))]
 pub mod opendata;
 
 #[cfg(feature = "weather")]
+#[cfg_attr(docsrs, doc(cfg(feature = "weather")))]
 pub mod weather;

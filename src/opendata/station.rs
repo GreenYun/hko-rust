@@ -4,7 +4,7 @@
 use strum::Display;
 
 #[allow(clippy::module_name_repetitions)]
-#[derive(Clone, Debug, Display, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Display, Eq, PartialEq)]
 pub enum SeaStation {
     /// Cheung Chau
     CCH,
@@ -37,7 +37,7 @@ pub enum SeaStation {
 }
 
 #[allow(clippy::module_name_repetitions)]
-#[derive(Clone, Debug, Display, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Display, Eq, PartialEq)]
 pub enum TempStation {
     /// Cheung Chau
     CCH,
@@ -120,7 +120,7 @@ pub enum TempStation {
 }
 
 #[allow(clippy::module_name_repetitions)]
-#[derive(Clone, Debug, Display, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Display, Eq, PartialEq)]
 pub enum WeatherStation {
     /// Cheung Chau
     CCH,

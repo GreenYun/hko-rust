@@ -105,7 +105,7 @@ impl FromStr for Response {
 }
 
 #[must_use]
-pub fn url(lang: &Lang, response_format: Option<ResponseFormat>) -> String {
+pub fn url(lang: Lang, response_format: Option<ResponseFormat>) -> String {
     format!(
         concat_url!(LHL, "&lang={}{}"),
         lang,
@@ -115,10 +115,22 @@ pub fn url(lang: &Lang, response_format: Option<ResponseFormat>) -> String {
 
 #[allow(clippy::missing_errors_doc)]
 #[cfg(feature = "fetch")]
+#[cfg_attr(docsrs, doc(cfg(feature = "fetch")))]
 pub async fn fetch(lang: Lang, response_format: Option<ResponseFormat>) -> anyhow::Result<Response> {
-    use reqwest::get;
+    let client = reqwest::Client::builder().build()?;
 
-    Ok(Response::from_str(
-        &get(url(&lang, response_format)).await?.text().await?,
-    )?)
+    fetch_with_client(lang, response_format, client).await
+}
+
+#[allow(clippy::missing_errors_doc)]
+#[cfg(feature = "fetch")]
+#[cfg_attr(docsrs, doc(cfg(feature = "fetch")))]
+pub async fn fetch_with_client(
+    lang: Lang,
+    response_format: Option<ResponseFormat>,
+    client: reqwest::Client,
+) -> anyhow::Result<Response> {
+    let resp = client.get(url(lang, response_format)).send().await?.text().await?;
+
+    Ok(Response::from_str(&resp)?)
 }
